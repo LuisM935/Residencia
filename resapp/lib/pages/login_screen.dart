@@ -1,0 +1,143 @@
+import 'package:flutter/material.dart';
+import 'package:resapp/pages/menu.dart';
+import 'package:resapp/pages/signup_screen.dart';
+import 'package:resapp/constants/colors.dart';
+
+
+class loginScreen extends StatelessWidget{
+  const loginScreen({Key? key}) : super(key: key);
+
+  @override
+
+  Widget build(BuildContext context){
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colores.pColor
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 60.0, left: 22),
+          child: Text('Bienvenido\nInicia sesión', style: TextStyle(
+            fontSize: 30,
+            color: Colors.white,
+            fontWeight: FontWeight.bold
+          ),),
+
+        )
+      ),
+        Padding(padding: const EdgeInsets.only(top:200.0),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(40),
+                topRight: Radius.circular(40)
+              ),
+              color: Colores.qColor,
+            ),
+            
+            height: double.infinity,
+            width: double.infinity,
+
+            child: Padding(
+              padding: const EdgeInsets.only(left: 18.0,right: 18),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextField(
+                    decoration: InputDecoration(
+                      suffixIcon: Icon(Icons.mail, color: Colors.black,),
+                      label: Text('Correo electrónico', style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        
+                      ),)
+                    ),
+                  ),
+                  TextField(
+                    decoration: InputDecoration(
+                      suffixIcon: Icon(Icons.key, color: Colors.black,),
+                      label: Text('Contraseña', style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        
+                      ),)
+                    ),
+                  ),
+                  SizedBox(height: 20,),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text('¿Olvidaste tu contraseña?', style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        
+                      ),),
+                  ),
+                  SizedBox(height: 50,),
+                  GestureDetector(
+
+                  onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const MainMenu()));
+                    },
+
+                  child: Container(
+                      height: 50,
+                      width: 300,
+                      decoration: BoxDecoration(
+                        color: Colores.pColor,
+                      borderRadius: BorderRadius.circular(30)
+                    ),
+                    
+                      
+                      
+                    child: Center(child: Text('Iniciar sesión', style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.white
+                      
+                    ),
+                    ),
+                    ),
+                  )
+                  ),
+
+                  
+                  SizedBox(height: 30,),
+                  
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: GestureDetector(
+                    onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const SignupScreen()));
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text('¿No tienes una cuenta?', style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey
+                        ),),
+                        Text('Regístrate', style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black
+                        ),)
+                      ],
+                    )
+                    )
+                  )
+                ],
+              ),
+            ),
+          ),
+        )
+        ],
+      )
+
+    );
+  }
+}
