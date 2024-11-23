@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
 import 'package:resapp/util/NavBar.dart';
+import 'package:resapp/games/mathGame/math_game.dart';
 
 
 class MainMenu extends StatelessWidget{
@@ -63,7 +64,7 @@ class MainMenu extends StatelessWidget{
                     contentPadding: EdgeInsets.all(16.0), // Espaciado interno
                     leading: Icon(Icons.gamepad, color: Colors.white), // Icono
                     title: Text(
-                      'Juego 1',
+                      'Juego de Atención',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -91,7 +92,7 @@ class MainMenu extends StatelessWidget{
                     contentPadding: EdgeInsets.all(16.0),
                     leading: Icon(Icons.gamepad, color: Colors.white),
                     title: Text(
-                      'Juego 2',
+                      'Juego de Memoria',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -118,7 +119,7 @@ class MainMenu extends StatelessWidget{
                     contentPadding: EdgeInsets.all(16.0),
                     leading: Icon(Icons.gamepad, color: Colors.white),
                     title: Text(
-                      'Juego 3',
+                      'Juego de Razonamiento',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -145,7 +146,7 @@ class MainMenu extends StatelessWidget{
                     contentPadding: EdgeInsets.all(16.0),
                     leading: Icon(Icons.gamepad, color: Colors.white),
                     title: Text(
-                      'Juego 4',
+                      'Juego matemático',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -153,11 +154,11 @@ class MainMenu extends StatelessWidget{
                       ),
                     ),
                     subtitle: Text(
-                      'Descripción del juego 4',
+                      '¡Demuestra tus habilidades numéricas!',
                       style: TextStyle(color: Colors.white),
                     ),
                     onTap: () {
-                      print('Juego 4 seleccionado');
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MathGame()));
                     },
                   ),
                 ),
