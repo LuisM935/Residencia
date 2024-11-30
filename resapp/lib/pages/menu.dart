@@ -3,6 +3,7 @@ import 'package:resapp/constants/colors.dart';
 import 'package:resapp/util/NavBar.dart';
 import 'package:resapp/games/mathGame/math_game.dart';
 import 'package:resapp/games/memoryGame/memory_game.dart';
+import 'package:resapp/games/attentionGame/attention_game.dart';
 
 
 class MainMenu extends StatelessWidget{
@@ -78,7 +79,7 @@ class MainMenu extends StatelessWidget{
                     ),
                     onTap: () {
                       // Acción al seleccionar
-                      print('Juego 1 seleccionado');
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => AttentionGame()));
                     },
                   ),
                 ),
