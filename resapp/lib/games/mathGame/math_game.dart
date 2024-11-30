@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:resapp/constants/colors.dart';
 
 
 class MathGame extends StatefulWidget {
@@ -15,7 +16,7 @@ class _MathGameState extends State<MathGame> {
   int correctAnswer = 0; // Valor predeterminado.
   List<int> options = []; // Valor predeterminado.
   late Timer timer;
-  int timeLeft = 7; // Tiempo límite por pregunta.
+  int timeLeft = 500; // Tiempo límite por pregunta.
   bool isGameOver = false;
 
   final Random random = Random();
@@ -105,9 +106,9 @@ void generateNewQuestion() {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colores.qColor,
       appBar: AppBar(
-        backgroundColor: Colors.red,
+        backgroundColor: Colores.pColor,
         title: Text('Math Game'),
         centerTitle: true,
       ),
@@ -147,14 +148,25 @@ void generateNewQuestion() {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    '¿Cuánto es $number1 $operation $number2?',
-                    style: TextStyle(fontSize: 28),
+                  Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16.0), 
+                        color: Colores.pColor,
+                        
+                      ),
+                      padding: EdgeInsets.all(10.0), // Espacio interno dentro del Container
+                      child: Text(
+                        '¿Cuánto es $number1 $operation $number2?',
+                        style: TextStyle(fontSize: 28, color: Colores.qColor),
+                      ),
+                    ),
                   ),
                   SizedBox(height: 20),
                   Text(
                     'Tiempo restante: $timeLeft segundos',
-                    style: TextStyle(fontSize: 20, color: Colors.red),
+                    style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 20),
                   GridView.builder(
@@ -169,12 +181,12 @@ void generateNewQuestion() {
                     itemBuilder: (context, index) {
                       return ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
+                          backgroundColor: Colores.pColor,
                         ),
                         onPressed: () => checkAnswer(options[index]),
                         child: Text(
                           '${options[index]}',
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(fontSize: 20, color: Colores.qColor),
                         ),
                       );
                     },

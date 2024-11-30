@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
 import 'package:resapp/util/NavBar.dart';
 import 'package:resapp/games/mathGame/math_game.dart';
+import 'package:resapp/games/memoryGame/memory_game.dart';
 
 
 class MainMenu extends StatelessWidget{
@@ -72,7 +73,7 @@ class MainMenu extends StatelessWidget{
                       ),
                     ),
                     subtitle: Text(
-                      'Descripción del juego 1',
+                      'Prueba de Stroop',
                       style: TextStyle(color: Colors.white),
                     ),
                     onTap: () {
@@ -100,11 +101,11 @@ class MainMenu extends StatelessWidget{
                       ),
                     ),
                     subtitle: Text(
-                      'Descripción del juego 2',
+                      'Matriz de memoria',
                       style: TextStyle(color: Colors.white),
                     ),
                     onTap: () {
-                      print('Juego 2 seleccionado');
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MemoryGame()));
                     },
                   ),
                 ),
@@ -127,7 +128,7 @@ class MainMenu extends StatelessWidget{
                       ),
                     ),
                     subtitle: Text(
-                      'Descripción del juego 3',
+                      'RushHour',
                       style: TextStyle(color: Colors.white),
                     ),
                     onTap: () {
