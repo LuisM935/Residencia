@@ -16,8 +16,10 @@ class _MathGameState extends State<MathGame> {
   int correctAnswer = 0; // Valor predeterminado.
   List<int> options = []; // Valor predeterminado.
   late Timer timer;
-  int timeLeft = 500; // Tiempo límite por pregunta.
+  int timeLeft = 5; // Tiempo límite por pregunta.
   bool isGameOver = false;
+  int puntuacion = 0;
+  int record = 0;
 
   final Random random = Random();
 
@@ -89,6 +91,7 @@ void generateNewQuestion() {
         } else {
           timer.cancel();
           isGameOver = true; // Fin del juego si el tiempo se agota.
+          puntuacion = 0;
         }
       });
     });
@@ -97,7 +100,11 @@ void generateNewQuestion() {
   void checkAnswer(int selectedAnswer) {
     if (selectedAnswer == correctAnswer) {
       setState(() {
-        timeLeft = 7; // Reiniciar tiempo.
+        timeLeft = 5 ; // Reiniciar tiempo.
+        puntuacion++;
+        if(puntuacion > record){
+          record++;
+        }
         generateNewQuestion(); // Generar nueva pregunta.
       });
     } 
@@ -109,7 +116,7 @@ void generateNewQuestion() {
       backgroundColor: Colores.qColor,
       appBar: AppBar(
         backgroundColor: Colores.pColor,
-        title: Text('Math Game'),
+        title: Text('Juego matemático'),
         centerTitle: true,
       ),
       body: isGameOver
@@ -131,7 +138,7 @@ void generateNewQuestion() {
                     onPressed: () {
                       setState(() {
                         isGameOver = false;
-                        timeLeft = 7;
+                        timeLeft = 5;
                         generateNewQuestion();
                         startTimer();
                       });
@@ -145,9 +152,31 @@ void generateNewQuestion() {
             
           : Padding(
               padding: const EdgeInsets.all(16.0),
+              
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                
+                
+                   children: [
+                    
+                 
+                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                     children: [
+                      Text(
+                            'Record: $record',
+                            style: TextStyle(fontSize: 28, color: Colores.pColor),
+                            textAlign: TextAlign.right,
+                          ),
+                       Text(
+                            'Puntuación: $puntuacion',
+                            style: TextStyle(fontSize: 28, color: Colores.pColor),
+                            textAlign: TextAlign.right,
+                          ),
+                     ],
+                   ),
+
+                  SizedBox(height: 50),
+
                   Padding(
                     padding: EdgeInsets.all(12.0),
                     child: Container(

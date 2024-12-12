@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:resapp/constants/colors.dart';
 
 class AttentionGame extends StatefulWidget {
   @override
@@ -112,19 +113,21 @@ class _AttentionGameState extends State<AttentionGame> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return Container(
+      color: Colores.qColor,
       child: _isGameOver
           ? Column(
+              
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   'Juego Terminado',
-                  style: TextStyle(fontSize: 30),
+                  style: TextStyle(fontSize: 30, color: Colores.pColor),
                 ),
                 Text(
                   'Puntuación: $_score',
-                  style: TextStyle(fontSize: 25),
+                  style: TextStyle(fontSize: 25, color: Colores.pColor),
                 ),
                 ElevatedButton(
                   onPressed: _resetGame,
@@ -137,7 +140,7 @@ class _AttentionGameState extends State<AttentionGame> {
               children: [
                 Text(
                   'Tiempo restante: $_timeLeft s',
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(fontSize: 20, color: Colors.red),
                 ),
                 SizedBox(height: 50),
                 Text(
@@ -155,7 +158,7 @@ class _AttentionGameState extends State<AttentionGame> {
                       style: ElevatedButton.styleFrom(backgroundColor: color), // Correcto
                       child: Text(
                         '',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colores.pColor),
                       ),
                     );
                   }).toList(),
@@ -163,7 +166,7 @@ class _AttentionGameState extends State<AttentionGame> {
                 SizedBox(height: 50),
                 Text(
                   'Puntuación: $_score',
-                  style: TextStyle(fontSize: 25),
+                  style: TextStyle(fontSize: 25, color: Colores.pColor),
                 ),
               ],
             ),
