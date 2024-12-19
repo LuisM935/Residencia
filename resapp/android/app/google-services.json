@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "966622088956",
+    "project_id": "brainplus-bd",
+    "storage_bucket": "brainplus-bd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966622088956:android:7989eeff716a655df6d179",
+        "android_client_info": {
+          "package_name": "com.example.resapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEoX27mc7pFJ89JFOklPHEMZO-ZxLqvH8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -18,7 +18,8 @@ class MainMenu extends StatelessWidget{
         backgroundColor: Colores.pColor,
         title: Text('Brain+', style: TextStyle(
           fontSize: 25,
-          fontWeight: FontWeight.bold
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),),
        
       ),
@@ -36,46 +37,64 @@ class MainMenu extends StatelessWidget{
             ),
           ),
 
-          Padding(
-            padding: const EdgeInsets.all(20),
-            child: Text('¿Qué vamos a mejorar hoy?', style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 25,
-              color: Colors.black,),
-              
-            ),
-          ),
+          
           
           // Aquí, el ListView se asegura de no superponerse
           Positioned(
-            top: 100,  
+            top: 50,  
             left: 0,
             right: 0,
             bottom: 0,
             child: ListView(
                   children: [
+                  Center(
+                    child: Container(
+                      width: 500,
+                      margin: EdgeInsets.all(20.0), // Espacio entre los contenedores
+                      decoration: BoxDecoration(
+                        color: Colores.pColor, // Color de fondo azul
+                        borderRadius: BorderRadius.circular(16), // Bordes redondeados
+                      ),
+                      child: ListTile(
+                       // Espaciado interno
+                      
+                      title: Text(
+                        '¿Qué vamos a mejorar hoy?',textAlign: TextAlign.center,
+                        style: TextStyle(
+                          
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
+                          color: Colores.txtColor, // Texto blanco
+                          
+                        ),
+                      
+                      ),
+                     
+                    ),
+                                    ),
+                  ),
                 // Contenedor con borde redondeado
                 Container(
                   
                   margin: EdgeInsets.all(8.0), // Espacio entre los contenedores
                   decoration: BoxDecoration(
-                    color: Colores.sColor, // Color de fondo azul
+                    color: Color(0xFF8174A0), // Color de fondo azul
                     borderRadius: BorderRadius.circular(16), // Bordes redondeados
                   ),
                   child: ListTile(
                     contentPadding: EdgeInsets.all(16.0), // Espaciado interno
-                    leading: Icon(Icons.gamepad, color: Colors.white), // Icono
+                    leading: Icon(Icons.gamepad, color: Colores.txtColor), // Icono
                     title: Text(
                       'Juego de Atención',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white, // Texto blanco
+                        color: Colores.txtColor, // Texto blanco
                       ),
                     ),
                     subtitle: Text(
                       'Prueba de Stroop',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colores.txtColor),
                     ),
                     onTap: () {
                       // Acción al seleccionar
@@ -87,7 +106,7 @@ class MainMenu extends StatelessWidget{
                 Container(
                   margin: EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
-                    color: Colores.sColor, // Color de fondo azul
+                    color: Color(0xFFED7D31), // Color de fondo azul
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: ListTile(
@@ -114,7 +133,7 @@ class MainMenu extends StatelessWidget{
                 Container(
                   margin: EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
-                    color: Colores.sColor, 
+                    color: Color(0xFF005B41), 
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: ListTile(
@@ -141,7 +160,7 @@ class MainMenu extends StatelessWidget{
                 Container(
                   margin: EdgeInsets.all(8.0),
                   decoration: BoxDecoration(
-                    color: Colores.sColor, 
+                    color: Color(0xFFB31312), 
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: ListTile(

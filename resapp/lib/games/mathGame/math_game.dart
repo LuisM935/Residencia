@@ -91,7 +91,7 @@ void generateNewQuestion() {
         } else {
           timer.cancel();
           isGameOver = true; // Fin del juego si el tiempo se agota.
-          puntuacion = 0;
+          
         }
       });
     });
@@ -113,10 +113,10 @@ void generateNewQuestion() {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colores.qColor,
+      backgroundColor: Colores.bgColor,
       appBar: AppBar(
         backgroundColor: Colores.pColor,
-        title: Text('Juego matemático'),
+        title: Text('Juego matemático', style: TextStyle(color: Colors.white),),
         centerTitle: true,
       ),
       body: isGameOver
@@ -131,19 +131,36 @@ void generateNewQuestion() {
                   
                   Text(
                     '¡Juego Terminado!',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.red),
                   ),
-                  SizedBox(height: 20),
+                  Text(
+                            'Puntuación: $puntuacion',
+                            style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.right,
+                          ),
+                  SizedBox(height: 50),
                   ElevatedButton(
+                    child: Text('Reiniciar', style: TextStyle(color: Colors.white, fontSize: 20),),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(200, 50),
+                      backgroundColor: Colores.pColor, 
+                       
+                      padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                      
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      )),
+                    
                     onPressed: () {
                       setState(() {
                         isGameOver = false;
                         timeLeft = 5;
                         generateNewQuestion();
                         startTimer();
+                        puntuacion = 0;
                       });
                     },
-                    child: Text('Reiniciar Juego'),
+                    
                   ),
                 ],
               ),
@@ -164,12 +181,12 @@ void generateNewQuestion() {
                      children: [
                       Text(
                             'Record: $record',
-                            style: TextStyle(fontSize: 28, color: Colores.pColor),
+                            style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.right,
                           ),
                        Text(
                             'Puntuación: $puntuacion',
-                            style: TextStyle(fontSize: 28, color: Colores.pColor),
+                            style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.right,
                           ),
                      ],
@@ -188,14 +205,14 @@ void generateNewQuestion() {
                       padding: EdgeInsets.all(10.0), // Espacio interno dentro del Container
                       child: Text(
                         '¿Cuánto es $number1 $operation $number2?',
-                        style: TextStyle(fontSize: 28, color: Colores.qColor),
+                        style: TextStyle(fontSize: 28, color: Colores.qColor, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
                   SizedBox(height: 20),
                   Text(
                     'Tiempo restante: $timeLeft segundos',
-                    style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 25, color: Colors.red, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 20),
                   GridView.builder(
@@ -215,7 +232,7 @@ void generateNewQuestion() {
                         onPressed: () => checkAnswer(options[index]),
                         child: Text(
                           '${options[index]}',
-                          style: TextStyle(fontSize: 20, color: Colores.qColor),
+                          style: TextStyle(fontSize: 30, color: Colores.qColor, fontWeight: FontWeight.bold),
                         ),
                       );
                     },

@@ -15,7 +15,7 @@ class _AttentionGameState extends State<AttentionGame> {
   late Color _currentColorText;
   late List<Color> _answerOptions;
   int _score = 0;
-  int _timeLeft = 10; // Tiempo en segundos
+  int _timeLeft = 60; // Tiempo en segundos
   late Timer _timer;
   bool _isGameOver = false;
 
@@ -90,21 +90,17 @@ class _AttentionGameState extends State<AttentionGame> {
         _score++;
       });
     } else {
-      setState(() {
-        _score = _score > 0 ? _score - 1 : 0; // Restar si la respuesta es incorrecta
-      });
+
     }
     _generateRandomColor(); // Generar una nueva pregunta
-    setState(() {
-      _timeLeft = 10; // Resetear el tiempo
-    });
+    
   }
 
   // Reiniciar el juego
   void _resetGame() {
     setState(() {
       _score = 0;
-      _timeLeft = 10;
+      _timeLeft = 60;
       _isGameOver = false;
     });
     _generateRandomColor();
@@ -112,35 +108,57 @@ class _AttentionGameState extends State<AttentionGame> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colores.qColor,
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+        backgroundColor: Colores.pColor,
+        title: Text('Juego de atención', style: TextStyle(color: Colors.white),),
+        centerTitle: true,
+      ),
+    body: Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: Color(0xFF313866), // Color de fondo
       child: _isGameOver
-          ? Column(
-              
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'Juego Terminado',
-                  style: TextStyle(fontSize: 30, color: Colores.pColor),
-                ),
-                Text(
-                  'Puntuación: $_score',
-                  style: TextStyle(fontSize: 25, color: Colores.pColor),
-                ),
-                ElevatedButton(
-                  onPressed: _resetGame,
-                  child: Text('Reiniciar'),
-                ),
-              ],
+          ? Center( // Centra los elementos
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '¡Se acabó el tiempo!',
+                    style: TextStyle(fontSize: 30, color: Colors.black),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Puntuación: $_score',
+                    style: TextStyle(fontSize: 20, color: Colors.red),
+                  ),
+                  SizedBox(height: 50),
+                  ElevatedButton(
+                    onPressed: _resetGame,
+                    child: Text('Reiniciar', style: TextStyle(color: Colores.txtColor, fontSize: 20),),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(300, 50),
+                      backgroundColor: Colores.pColor, 
+                       
+                      padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                      
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ))
+                    
+                    
+                  ),
+                ],
+              ),
             )
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   'Tiempo restante: $_timeLeft s',
-                  style: TextStyle(fontSize: 20, color: Colors.red),
+                  style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 50),
                 Text(
@@ -148,30 +166,36 @@ class _AttentionGameState extends State<AttentionGame> {
                   style: TextStyle(
                     fontSize: 50,
                     color: _currentColorText, // Color del texto
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 SizedBox(height: 50),
-                Column(
+                Wrap( // Uso de Wrap para manejar múltiples opciones
+                  spacing: 10, // Espacio horizontal entre botones
+                  runSpacing: 10, // Espacio vertical entre filas
                   children: _answerOptions.map((color) {
                     return ElevatedButton(
                       onPressed: () => _checkAnswer(color),
-                      style: ElevatedButton.styleFrom(backgroundColor: color), // Correcto
-                      child: Text(
-                        '',
-                        style: TextStyle(color: Colores.pColor),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: color,
+                        foregroundColor: Colors.white, // Contraste
                       ),
+                      child: Icon(Icons.circle, color: Colors.white),
                     );
                   }).toList(),
                 ),
                 SizedBox(height: 50),
                 Text(
                   'Puntuación: $_score',
-                  style: TextStyle(fontSize: 25, color: Colores.pColor),
+                  style: TextStyle(fontSize: 25, color: Colors.red, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
-    );
-  }
+    ),
+  );
+}
+
+
 
   @override
   void dispose() {

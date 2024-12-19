@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
+import 'package:resapp/constants/colors.dart';
 
 class MemoryGame extends StatefulWidget {
   @override
@@ -14,6 +15,8 @@ class _MemoryGameState extends State<MemoryGame> {
   bool showPattern = true;
   bool gameActive = false;
   int patternLength = 5;
+  int score = 0; // Variable para la puntuación
+
 
   @override
   void initState() {
@@ -35,23 +38,24 @@ class _MemoryGameState extends State<MemoryGame> {
     }
   }
 
-void _startGame() {
-  setState(() {
-    showPattern = true;
-    gameActive = false;
-  });
+  void _startGame() {
+    setState(() {
+      showPattern = true;
+      gameActive = false;
+    });
 
-  Timer(Duration(seconds: 3), () {
-    // Verifica si el widget todavía está montado antes de llamar a setState
-    if (mounted) {
-      setState(() {
-        showPattern = false;
-        gameActive = true;
-      });
-    }
-  });
-}
+    // Reproducir sonido al empezar el juego
+    
 
+    Timer(Duration(seconds: 3), () {
+      if (mounted) {
+        setState(() {
+          showPattern = false;
+          gameActive = true;
+        });
+      }
+    });
+  }
 
   void _checkSelection(int index) {
     if (!gameActive || showPattern) return;
@@ -60,10 +64,19 @@ void _startGame() {
       userSelection[index] = !userSelection[index];
     });
 
+    // Si el jugador selecciona correctamente
     if (_isGameWon()) {
-      _showResultDialog("¡Ganaste!");
+      setState(() {
+        score++;
+
+        _resetGame(); // Incrementa la puntuación cuando acierta toda la matriz
+      });
+     
+      
     } else if (_isGameLost()) {
-      _showResultDialog("¡Perdiste!");
+      
+      _showResultDialog("¡Perdiste! Puntuación: $score");
+      score = 0;
     }
   }
 
@@ -117,32 +130,45 @@ void _startGame() {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Juego de Patrón de Memoria'),
+        backgroundColor: Colores.pColor,
+        title: Text('Juego de Patrón de Memoria', style: TextStyle(color: Colores.txtColor),),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: gridSize,
-            crossAxisSpacing: 4.0,
-            mainAxisSpacing: 4.0,
-          ),
-          itemCount: gridSize * gridSize,
-          itemBuilder: (context, index) {
-            bool isPatternSquare = pattern.contains(index);
-            bool isUserSelected = userSelection[index];
+        padding: const EdgeInsets.only(top:50,left: 32,right: 32,bottom:0 ),
+        child: Column(
+          children: [
+            // Mostrar la puntuación
+            Text(
+              'Puntuación: $score',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 50,),
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: gridSize,
+                  crossAxisSpacing: 4.0,
+                  mainAxisSpacing: 4.0,
+                ),
+                itemCount: gridSize * gridSize,
+                itemBuilder: (context, index) {
+                  bool isPatternSquare = pattern.contains(index);
+                  bool isUserSelected = userSelection[index];
 
-            return GestureDetector(
-              onTap: () => _checkSelection(index),
-              child: Container(
-                color: showPattern && isPatternSquare
-                    ? Colors.green
-                    : isUserSelected
-                        ? Colors.blue
-                        : Colors.grey[300],
+                  return GestureDetector(
+                    onTap: () => _checkSelection(index),
+                    child: Container(
+                      color: showPattern && isPatternSquare
+                          ? Colors.green
+                          : isUserSelected
+                              ? Colors.blue
+                              : Colors.grey[300],
+                    ),
+                  );
+                },
               ),
-            );
-          },
+            ),
+          ],
         ),
       ),
     );

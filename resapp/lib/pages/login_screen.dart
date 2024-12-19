@@ -2,10 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:resapp/pages/menu.dart';
 import 'package:resapp/pages/signup_screen.dart';
 import 'package:resapp/constants/colors.dart';
+//firebase
+import 'package:firebase_core/firebase_core.dart';
+import '/firebase_options.dart';
+import 'package:resapp/services/auth_service.dart';
 
 
-class loginScreen extends StatelessWidget{
-  const loginScreen({Key? key}) : super(key: key);
+class LoginScreen extends StatefulWidget{
+  @override 
+  _LoginScreen createState() => _LoginScreen();
+}
+class _LoginScreen extends State<LoginScreen>{
+  
+
+    TextEditingController emailController = TextEditingController(text: "");
+  TextEditingController passwordController = TextEditingController(text: "");
 
   @override
 
@@ -13,6 +24,8 @@ class loginScreen extends StatelessWidget{
     return Scaffold(
       body: Stack(
         children: [
+
+          
           Container(
 
         height: double.infinity,
@@ -21,12 +34,13 @@ class loginScreen extends StatelessWidget{
           color: Colores.pColor
         ),
         child: Padding(
-          padding: const EdgeInsets.only(top: 60.0, left: 22),
+         padding: const EdgeInsets.only(top: 60.0, left: 22),
           child: Text('Bienvenido\nInicia sesión', style: TextStyle(
             fontSize: 30,
             color: Colors.white,
             fontWeight: FontWeight.bold
           ),),
+          
 
         )
       ),
@@ -49,6 +63,7 @@ class loginScreen extends StatelessWidget{
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextField(
+                    controller: emailController,
                     decoration: InputDecoration(
                       suffixIcon: Icon(Icons.mail, color: Colors.black,),
                       label: Text('Correo electrónico', style: TextStyle(
@@ -59,6 +74,7 @@ class loginScreen extends StatelessWidget{
                     ),
                   ),
                   TextField(
+                    controller: passwordController,
                     decoration: InputDecoration(
                       suffixIcon: Icon(Icons.key, color: Colors.black,),
                       label: Text('Contraseña', style: TextStyle(
@@ -66,7 +82,9 @@ class loginScreen extends StatelessWidget{
                         color: Colors.black,
                         
                       ),)
+                      
                     ),
+                    obscureText: true,
                   ),
                   SizedBox(height: 20,),
                   Align(
@@ -78,32 +96,38 @@ class loginScreen extends StatelessWidget{
                       ),),
                   ),
                   SizedBox(height: 50,),
-                  GestureDetector(
+                  ElevatedButton(
+                      
+                      onPressed: () async{
+                        await AuthService().signin(
+                          email: emailController.text,
+                          password: passwordController.text,
+                          context: context,
+                          
+                          );
 
-                  onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const MainMenu()));
-                    },
-
-                  child: Container(
-                      height: 50,
-                      width: 300,
-                      decoration: BoxDecoration(
-                        color: Colores.pColor,
-                      borderRadius: BorderRadius.circular(30)
-                    ),
-                    
+                        
                       
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(350, 50),
+                      backgroundColor: Colores.pColor, 
+                       
+                      padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
                       
-                    child: Center(child: Text('Iniciar sesión', style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.white
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ))
+                      ,
+                      child: Text('Iniciar sesion', 
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.white
+                        ),
+                      ),
                       
                     ),
-                    ),
-                    ),
-                  )
-                  ),
 
                   
                   SizedBox(height: 30,),
@@ -112,7 +136,7 @@ class loginScreen extends StatelessWidget{
                     alignment: Alignment.bottomRight,
                     child: GestureDetector(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const SignupScreen()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) =>  SignupScreen()));
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,

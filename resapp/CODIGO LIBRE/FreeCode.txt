@@ -1,0 +1,36 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+//cargar ver info
+
+FirebaseFirestore db = FirebaseFirestore.instance;
+
+//Leer información.
+Future<List> getPeople() async{
+  List people = [];
+
+  CollectionReference collectionReferencePeople = db.collection('user');
+
+  QuerySnapshot queryPeople = await collectionReferencePeople.get();
+
+  queryPeople.docs.forEach((documento){
+    people.add(documento.data());
+
+  });
+
+  return people;
+}
+
+
+//Guardar informacion
+
+Future<void> addInfo(String name, String lastname, String email, String password) async{
+  await db.collection("user").add({
+    "name": name,
+    "lastname": lastname,
+    "email" : email,
+    "password" : password,
+    
+    }
+    
+    
+    );
+}

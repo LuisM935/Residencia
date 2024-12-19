@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:resapp/pages/login_screen.dart';
 import 'package:resapp/constants/colors.dart';
+import 'package:resapp/services/auth_service.dart';
 
 
-class SignupScreen extends StatelessWidget{
-  const SignupScreen({Key? key}) : super(key: key);
+
+class SignupScreen extends StatefulWidget{
+  @override 
+  _SignupScreen createState() => _SignupScreen();
+}
+
+
+class _SignupScreen extends State<SignupScreen>{
+  
+
+
+  TextEditingController nameController = TextEditingController(text: "");
+  TextEditingController lastnameController = TextEditingController(text: "");
+  TextEditingController emailController = TextEditingController(text: "");
+  TextEditingController passwordController = TextEditingController(text: "");
+
+  
 
   @override
 
@@ -48,27 +64,9 @@ class SignupScreen extends StatelessWidget{
               child: Column(
                 
                 children: [
+                  
                   TextField(
-                    decoration: InputDecoration(
-                      suffixIcon: Icon(Icons.person, color: Colors.black,),
-                      label: Text('Nombre(s)', style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        
-                      ),)
-                    ),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      suffixIcon: Icon(Icons.person, color: Colors.black,),
-                      label: Text('Apellido(s)', style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        
-                      ),)
-                    ),
-                  ),
-                  TextField(
+                    controller: emailController,
                     decoration: InputDecoration(
                       suffixIcon: Icon(Icons.mail, color: Colors.black,),
                       label: Text('Correo electrónico', style: TextStyle(
@@ -79,39 +77,60 @@ class SignupScreen extends StatelessWidget{
                     ),
                   ),
                   TextField(
+                    controller: passwordController,
                     decoration: InputDecoration(
                       suffixIcon: Icon(Icons.key, color: Colors.black,),
                       label: Text('Contraseña', style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                         
-                      ),)
+                      ),
+                      
+                      )
                     ),
+
+                    obscureText: true,
                   ),
                   
                  
                   SizedBox(height: 100,),
-                  Container(
-                    
-                    height: 50,
-                    width: 300,
-                    decoration: BoxDecoration(
-                      color: Colores.pColor,
-                      borderRadius: BorderRadius.circular(30)
+                   
+                   ElevatedButton(
+                      
+                      onPressed: () async{
+                        await AuthService().signup(
+                          email: emailController.text,
+                          password: passwordController.text,
+                          );
+                      
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(350, 50),
+                      backgroundColor: Colores.pColor, 
+                       
+                      padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                      
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ))
+                      ,
+                      child: Text('Crear cuenta', 
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.white
+                        ),
+                      ),
+                      
                     ),
-                    child: Center(child: Text('Crear cuenta', style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.white
-                    ),),),
                     
-                  ),
+                  
                   SizedBox(height: 50,),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: GestureDetector(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const loginScreen()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) =>  LoginScreen()));
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
