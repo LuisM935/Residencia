@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
 import 'package:resapp/pages/menu.dart';
+//Firebase
+import 'package:resapp/services/userscores_service.dart';
 
 
 class MathGame extends StatefulWidget {
@@ -19,23 +22,60 @@ class _MathGameState extends State<MathGame> {
   late Timer timer;
   int timeLeft = 5; // Tiempo límite por pregunta.
   bool isGameOver = false;
-  int puntuacion = 0;
-  int record = 0;
+  int score = 0; //Puntuacion actual
+  int mathGameRecord = 0; //Record de juego
+
+  //ID DEL JUEGO
+  String gameId = "mathGame";
 
   final Random random = Random();
+
+
+
+
+  
 
   @override
   void initState() {
     super.initState();
     generateNewQuestion();
     startTimer();
+    _getMathGameRecord();
   }
+  // Función para obtener el récord desde Firestore
+Future<void> _getMathGameRecord() async {
+  try {
+    // Obtener el userId desde Firebase Authentication
+    String userId = FirebaseAuth.instance.currentUser?.uid ?? 'default_user';
+    print('Recuperando el récord para el usuario: $userId');
+    
+    // Llamar al servicio para obtener el récord
+    int? record = await GameService().getMathGameRecord(userId);
 
-  @override
-  void dispose() {
-    timer.cancel();
-    super.dispose();
+    // Verificar el valor que se ha recuperado
+    print('Recibido el récord: $record');
+    
+    // Actualizar el estado con el récord recuperado
+    setState(() {
+      mathGameRecord = record ?? 0; // Si el récord es null, asignar 0
+    });
+
+  } catch (e) {
+    print('Error al obtener el récord: $e');
   }
+}
+
+
+
+
+@override
+void dispose() {
+  if (timer != null) {
+    timer.cancel(); // Asegúrate de que el timer no sea null antes de cancelarlo
+  }
+  super.dispose();
+}
+
 
 void generateNewQuestion() {
   setState(() {
@@ -84,7 +124,7 @@ void generateNewQuestion() {
 
 
 
-  void startTimer() {
+void startTimer() {
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
         if (timeLeft > 0) {
@@ -102,11 +142,18 @@ void generateNewQuestion() {
     if (selectedAnswer == correctAnswer) {
       setState(() {
         timeLeft = 5 ; // Reiniciar tiempo.
-        puntuacion++;
-        if(puntuacion > record){
-          record++;
-        }
+        score++;
+if (score > mathGameRecord) {
+  mathGameRecord = score;
+  print("Nuevo récord alcanzado: $mathGameRecord");
+  
+  // Actualizar el récord en Firestore
+  GameService().saveGameRecord(gameId: gameId, record: mathGameRecord);
+}
+
+
         generateNewQuestion(); // Generar nueva pregunta.
+       
       });
     } 
   }
@@ -135,7 +182,7 @@ void generateNewQuestion() {
                     style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.red),
                   ),
                   Text(
-                            'Puntuación: $puntuacion',
+                            'Puntuación: $score',
                             style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.right,
                           ),
@@ -158,7 +205,7 @@ void generateNewQuestion() {
                         timeLeft = 5;
                         generateNewQuestion();
                         startTimer();
-                        puntuacion = 0;
+                        score = 0;
                       });
                     },
                     
@@ -204,12 +251,12 @@ void generateNewQuestion() {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                      children: [
                       Text(
-                            'Record: $record',
+                            'Record: $mathGameRecord',
                             style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.right,
                           ),
                        Text(
-                            'Puntuación: $puntuacion',
+                            'Puntuación: $score',
                             style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.right,
                           ),
