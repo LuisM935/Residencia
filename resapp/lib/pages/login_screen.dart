@@ -1,10 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:resapp/pages/menu.dart';
+
 import 'package:resapp/pages/signup_screen.dart';
 import 'package:resapp/constants/colors.dart';
 //firebase
-import 'package:firebase_core/firebase_core.dart';
-import '/firebase_options.dart';
+
 import 'package:resapp/services/auth_service.dart';
 
 
@@ -14,8 +14,8 @@ class LoginScreen extends StatefulWidget{
 }
 class _LoginScreen extends State<LoginScreen>{
   
-
-    TextEditingController emailController = TextEditingController(text: "");
+  
+  TextEditingController emailController = TextEditingController(text: "");
   TextEditingController passwordController = TextEditingController(text: "");
 
   @override

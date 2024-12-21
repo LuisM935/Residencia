@@ -16,9 +16,10 @@ class _SignupScreen extends State<SignupScreen>{
 
 
   TextEditingController nameController = TextEditingController(text: "");
-  TextEditingController lastnameController = TextEditingController(text: "");
+  
   TextEditingController emailController = TextEditingController(text: "");
   TextEditingController passwordController = TextEditingController(text: "");
+  TextEditingController usernameController = TextEditingController(text: "");
 
   
 
@@ -64,6 +65,17 @@ class _SignupScreen extends State<SignupScreen>{
               child: Column(
                 
                 children: [
+                  TextField(
+                    controller: usernameController,
+                    decoration: InputDecoration(
+                      suffixIcon: Icon(Icons.person, color: Colors.black,),
+                      label: Text('Nombre de usuario', style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        
+                      ),)
+                    ),
+                  ),
                   
                   TextField(
                     controller: emailController,
@@ -101,8 +113,12 @@ class _SignupScreen extends State<SignupScreen>{
                         await AuthService().signup(
                           email: emailController.text,
                           password: passwordController.text,
+                          username: usernameController.text,
                           );
-                      
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginScreen()),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(350, 50),

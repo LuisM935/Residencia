@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
+import 'package:resapp/pages/menu.dart';
 
 
 class MathGame extends StatefulWidget {
@@ -159,6 +160,29 @@ void generateNewQuestion() {
                         startTimer();
                         puntuacion = 0;
                       });
+                    },
+                    
+                  ),
+                  SizedBox(height: 25,),
+                  ElevatedButton(
+                    child: Text('Salir', style: TextStyle(color: Colors.white, fontSize: 20),),
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: Size(200, 50),
+                      backgroundColor: Colores.pColor, 
+                       
+                      padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                      
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      )),
+                    
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => MainMenu()),
+                      (Route<dynamic> route) => false, // Esto elimina todas las rutas de la pila
+                    );
+
                     },
                     
                   ),

@@ -1,14 +1,21 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
+import 'package:resapp/games/mathGame/mgMenu.dart';
 import 'package:resapp/util/NavBar.dart';
 import 'package:resapp/games/mathGame/math_game.dart';
 import 'package:resapp/games/memoryGame/memory_game.dart';
 import 'package:resapp/games/attentionGame/attention_game.dart';
 
+class MainMenu extends StatefulWidget{
+  @override 
+  _MainMenu createState() => _MainMenu();
+}
 
-class MainMenu extends StatelessWidget{
-  const MainMenu({Key? key}) : super(key: key);
-
+class _MainMenu extends State<MainMenu>{
+  
+  User? user = FirebaseAuth.instance.currentUser;
+  
   @override
 
   Widget build(BuildContext context){
@@ -59,10 +66,10 @@ class MainMenu extends StatelessWidget{
                        // Espaciado interno
                       
                       title: Text(
-                        '¿Qué vamos a mejorar hoy?',textAlign: TextAlign.center,
+                        '¿Qué vamos a mejorar hoy, ${user?.displayName ?? 'username'}?',textAlign: TextAlign.center,
                         style: TextStyle(
                           
-                          fontSize: 25,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: Colores.txtColor, // Texto blanco
                           
@@ -179,7 +186,7 @@ class MainMenu extends StatelessWidget{
                       style: TextStyle(color: Colors.white),
                     ),
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => MathGame()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MathGameMenu()));
                     },
                   ),
                 ),
