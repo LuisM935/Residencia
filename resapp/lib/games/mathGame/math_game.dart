@@ -70,9 +70,7 @@ Future<void> _getMathGameRecord() async {
 
 @override
 void dispose() {
-  if (timer != null) {
-    timer.cancel(); // Asegúrate de que el timer no sea null antes de cancelarlo
-  }
+  timer.cancel();
   super.dispose();
 }
 

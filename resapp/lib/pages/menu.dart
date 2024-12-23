@@ -1,11 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:resapp/constants/colors.dart';
-import 'package:resapp/games/mathGame/mgMenu.dart';
 import 'package:resapp/util/NavBar.dart';
-import 'package:resapp/games/mathGame/math_game.dart';
-import 'package:resapp/games/memoryGame/memory_game.dart';
-import 'package:resapp/games/attentionGame/attention_game.dart';
+//constants
+import 'package:resapp/constants/colors.dart';
+import 'package:resapp/constants/gamesDesc.dart';
+
+
+
+//AttentionGame
+import 'package:resapp/games/attentionGame/agMenu.dart';
+//Mathgame
+import 'package:resapp/games/mathGame/mgMenu.dart';
+//MemoryGame
+import 'package:resapp/games/memoryGame/memgMenu.dart';
+
 
 class MainMenu extends StatefulWidget{
   @override 
@@ -100,12 +108,36 @@ class _MainMenu extends State<MainMenu>{
                       ),
                     ),
                     subtitle: Text(
-                      'Prueba de Stroop',
+                      '¡Mídete con la prueba de Stroop!',
                       style: TextStyle(color: Colores.txtColor),
                     ),
+                    trailing: IconButton(
+                        icon: Icon(Icons.info_outline, color: Colors.white),  // Ícono de información
+                        onPressed: () {
+                          // Muestra un cuadro de diálogo con el texto que desees
+                          showDialog(
+                            
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: Color(0xFF8174A0),
+                                title: Text('Prueba de Stroop',style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                                content: Description.AttentionGameDesc,   
+                                actions: [
+                                  TextButton(
+                                    child: Text('Cerrar', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },),
                     onTap: () {
                       // Acción al seleccionar
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => AttentionGame()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => agMenu()));
                     },
                   ),
                 ),
@@ -131,8 +163,32 @@ class _MainMenu extends State<MainMenu>{
                       'Matriz de memoria',
                       style: TextStyle(color: Colors.white),
                     ),
+                    trailing: IconButton(
+                        icon: Icon(Icons.info_outline, color: Colors.white),  // Ícono de información
+                        onPressed: () {
+                          // Muestra un cuadro de diálogo con el texto que desees
+                          showDialog(
+                            
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: Color(0xFFED7D31),
+                                title: Text('Matriz de Memoria',style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                                content: Description.MemGDesc,   
+                                actions: [
+                                  TextButton(
+                                    child: Text('Cerrar', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },),
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => MemoryGame()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => MemGameMenu()));
                     },
                   ),
                 ),
@@ -185,6 +241,30 @@ class _MainMenu extends State<MainMenu>{
                       '¡Demuestra tus habilidades numéricas!',
                       style: TextStyle(color: Colors.white),
                     ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.info_outline, color: Colors.white),  // Ícono de información
+                        onPressed: () {
+                          // Muestra un cuadro de diálogo con el texto que desees
+                          showDialog(
+                            
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: Color(0xFFB31312),
+                                title: Text('Juego matemático',style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                                content: Description.MathGameDesc,   
+                                actions: [
+                                  TextButton(
+                                    child: Text('Cerrar', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },),
                     onTap: () {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => MathGameMenu()));
                     },
