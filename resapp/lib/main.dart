@@ -1,4 +1,5 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:resapp/pages/login_screen.dart';
 //firebase
@@ -31,4 +32,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

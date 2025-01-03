@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
 import 'package:resapp/pages/menu.dart';
+import 'package:flutter/foundation.dart';
 //Firebase
 import 'package:resapp/services/userscores_service.dart';
 
@@ -156,160 +157,143 @@ if (score > mathGameRecord) {
     } 
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colores.bgColor,
-      appBar: AppBar(
-        backgroundColor: Colores.pColor,
-        title: Text('Juego matemático', style: TextStyle(color: Colors.white),),
-        centerTitle: true,
-      ),
-      body: isGameOver
-          ? Center( 
-              
-              child: Column(
-                
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-
-                  
-                  
-                  Text(
-                    '¡Juego Terminado!',
-                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.red),
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colores.bgColor,
+    appBar: AppBar(
+      backgroundColor: Colores.pColor,
+      title: Text('Juego matemático', style: TextStyle(color: Colors.white)),
+      centerTitle: true,
+    ),
+    body: isGameOver
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '¡Juego Terminado!',
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.red),
+                ),
+                Text(
+                  'Puntuación: $score',
+                  style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.right,
+                ),
+                SizedBox(height: 50),
+                ElevatedButton(
+                  child: Text('Reiniciar', style: TextStyle(color: Colors.white, fontSize: 20)),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(200, 50),
+                    backgroundColor: Colores.pColor,
+                    padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                   ),
-                  Text(
-                            'Puntuación: $score',
-                            style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.right,
-                          ),
-                  SizedBox(height: 50),
-                  ElevatedButton(
-                    child: Text('Reiniciar', style: TextStyle(color: Colors.white, fontSize: 20),),
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: Size(200, 50),
-                      backgroundColor: Colores.pColor, 
-                       
-                      padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-                      
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      )),
-                    
-                    onPressed: () {
-                      setState(() {
-                        isGameOver = false;
-                        timeLeft = 5;
-                        generateNewQuestion();
-                        startTimer();
-                        score = 0;
-                      });
-                    },
-                    
+                  onPressed: () {
+                    setState(() {
+                      isGameOver = false;
+                      timeLeft = 5;
+                      generateNewQuestion();
+                      startTimer();
+                      score = 0;
+                    });
+                  },
+                ),
+                SizedBox(height: 25),
+                ElevatedButton(
+                  child: Text('Salir', style: TextStyle(color: Colors.white, fontSize: 20)),
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(200, 50),
+                    backgroundColor: Colores.pColor,
+                    padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                   ),
-                  SizedBox(height: 25,),
-                  ElevatedButton(
-                    child: Text('Salir', style: TextStyle(color: Colors.white, fontSize: 20),),
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: Size(200, 50),
-                      backgroundColor: Colores.pColor, 
-                       
-                      padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-                      
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      )),
-                    
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => MainMenu()),
-                      (Route<dynamic> route) => false, // Esto elimina todas las rutas de la pila
+                      (Route<dynamic> route) => false,
                     );
-
-                    },
-                    
-                  ),
-                ],
-              ),
-            )
-
-            
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              
-              child: Column(
-                
-                
-                   children: [
-                    
-                 
-                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                     children: [
-                      Text(
-                            'Record: $mathGameRecord',
-                            style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.right,
-                          ),
-                       Text(
-                            'Puntuación: $score',
-                            style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.right,
-                          ),
-                     ],
-                   ),
-
-                  SizedBox(height: 50),
-
-                  Padding(
-                    padding: EdgeInsets.all(12.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16.0), 
-                        color: Colores.pColor,
-                        
-                      ),
-                      padding: EdgeInsets.all(10.0), // Espacio interno dentro del Container
-                      child: Text(
-                        '¿Cuánto es $number1 $operation $number2?',
-                        style: TextStyle(fontSize: 28, color: Colores.qColor, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Tiempo restante: $timeLeft segundos',
-                    style: TextStyle(fontSize: 25, color: Colors.red, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 20),
-                  GridView.builder(
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // Dos botones por fila
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      childAspectRatio: 2, // Relación de ancho/alto (mayor valor = botones más anchos)
-                    ),
-                    itemCount: options.length,
-                    itemBuilder: (context, index) {
-                      return ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colores.pColor,
-                        ),
-                        onPressed: () => checkAnswer(options[index]),
-                        child: Text(
-                          '${options[index]}',
-                          style: TextStyle(fontSize: 30, color: Colores.qColor, fontWeight: FontWeight.bold),
-                        ),
-                      );
-                    },
-                  ),
-
-                ],
-              ),
+                  },
+                ),
+              ],
             ),
-    );
-  }
+          )
+        : Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Determinar si es Web o móvil
+                bool isWeb = kIsWeb || constraints.maxWidth > 600;
+
+                return Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Record: $mathGameRecord',
+                          style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.right,
+                        ),
+                        Text(
+                          'Puntuación: $score',
+                          style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.right,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 50),
+                    Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.0),
+                          color: Colores.pColor,
+                        ),
+                        padding: EdgeInsets.all(10.0),
+                        child: Text(
+                          '¿Cuánto es $number1 $operation $number2?',
+                          style: TextStyle(fontSize: 28, color: Colores.qColor, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Tiempo restante: $timeLeft segundos',
+                      style: TextStyle(fontSize: 25, color: Colors.red, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 20),
+                    // Si es Web o pantalla grande, usar un Grid más grande
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(), // Evita que el grid sea desplazable
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: isWeb ? 4 : 2, // 4 columnas en web, 2 en móvil
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                        childAspectRatio: isWeb ? 3 : 2, // Relación de aspecto más amplia en web
+                      ),
+                      itemCount: options.length,
+                      itemBuilder: (context, index) {
+                        return ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colores.pColor,
+                          ),
+                          onPressed: () => checkAnswer(options[index]),
+                          child: Text(
+                            '${options[index]}',
+                            style: TextStyle(fontSize: 30, color: Colores.qColor, fontWeight: FontWeight.bold),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+  );
+}
+
 }
