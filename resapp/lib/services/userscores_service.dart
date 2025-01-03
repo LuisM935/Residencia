@@ -50,6 +50,8 @@ Future<int?> getMathGameRecord(String userId) async {
           int record = records['mathGame'];  // Accede al campo mathGame dentro del mapa 'records'
           print('Récord recuperado desde Firestore: $record');
           return record;
+        }else if(records.containsKey('memoryGame')){
+          int record = records['memoryGame'];
         } else {
           print('El campo mathGame no está presente dentro de records, devolviendo 0');
           return 0;  // Si no se encuentra el campo mathGame, devuelve 0

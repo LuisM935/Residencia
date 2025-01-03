@@ -13,6 +13,8 @@ import 'package:resapp/games/attentionGame/agMenu.dart';
 import 'package:resapp/games/mathGame/mgMenu.dart';
 //MemoryGame
 import 'package:resapp/games/memoryGame/memgMenu.dart';
+//RazGame
+import 'package:resapp/games/RazGame/raz_game.dart';
 
 
 class MainMenu extends StatefulWidget{
@@ -211,11 +213,35 @@ class _MainMenu extends State<MainMenu>{
                       ),
                     ),
                     subtitle: Text(
-                      'RushHour',
+                      'Example',
                       style: TextStyle(color: Colors.white),
                     ),
+                    trailing: IconButton(
+                        icon: Icon(Icons.info_outline, color: Colors.white),  // Ícono de información
+                        onPressed: () {
+                          // Muestra un cuadro de diálogo con el texto que desees
+                          showDialog(
+                            
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: Color(0xFF005B41),
+                                title: Text('Juego de Razonamiento',style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                                content: Description.RazGameDesc,   
+                                actions: [
+                                  TextButton(
+                                    child: Text('Cerrar', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },),
                     onTap: () {
-                      print('Juego 3 seleccionado');
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RazGame()));
                     },
                   ),
                 ),
