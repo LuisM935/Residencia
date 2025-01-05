@@ -64,48 +64,57 @@ class AuthService {
   }
 
   //Iniciar sesion
-    Future<void> signin({
-    required String email, password,
-    required BuildContext context,
-  })async {
-    try{
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email, 
-        password: password
-        );
-      await Future.delayed(const Duration(seconds: 1));
-      Navigator.pushReplacement(
+Future<void> signin({
+  required String email, 
+  required String password, 
+  required BuildContext context,
+}) async {
+  try {
+    // Intentamos iniciar sesión con FirebaseAuth
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email, 
+      password: password,
+    );
+    
+    // Si el inicio de sesión es exitoso, navegamos al menú principal
+    await Future.delayed(const Duration(seconds: 1));
+    Navigator.pushReplacement(
       context, 
-      MaterialPageRoute(builder: (BuildContext context) => MainMenu()
-      )
-      );
-
-
-
-    } on FirebaseAuthException catch(e){
-      String message = "";
-      if (e.code == 'user-not-found'){
-        message = 'No user found for that email.';
-
-      }else if(e.code == 'wrong-password'){
-        message = 'Wrong password provided for that user.';
-      }
-      Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.SNACKBAR,
-        backgroundColor: Colors.black54,
-        textColor: Colors.white,
-        fontSize: 14,
-
-      );
-    }
+      MaterialPageRoute(builder: (BuildContext context) => MainMenu())
+    );
     
+  } on FirebaseAuthException catch (e) {
+    // Esto captura errores específicos de FirebaseAuth
+    String message = '';
     
-    catch(e){
-
+    if (e.code == 'user-not-found') {
+      message = 'No existe un usuario con ese correo electrónico.';
+    } else if (e.code == 'wrong-password') {
+      message = 'Contraseña incorrecta.';
+    } else {
+      message = 'An error occurred. Please try again later.';
     }
 
-    
+    // Mostrar el mensaje de error en un Toast
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.SNACKBAR,
+      backgroundColor: Colors.black54,
+      textColor: Colors.white,
+      fontSize: 14,
+    );
+  } catch (e) {
+    // Aquí capturamos cualquier otro tipo de error (no relacionado con FirebaseAuthException)
+    print('Unexpected Error: $e');  // Esto ayuda a depurar qué error realmente ocurre
+    Fluttertoast.showToast(
+      msg: 'An unexpected error occurred. Please try again.',
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.SNACKBAR,
+      backgroundColor: Colors.black54,
+      textColor: Colors.white,
+      fontSize: 14,
+    );
   }
+}
 }
