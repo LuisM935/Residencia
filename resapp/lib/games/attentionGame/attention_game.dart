@@ -9,8 +9,8 @@ class AttentionGame extends StatefulWidget {
 }
 
 class _AttentionGameState extends State<AttentionGame> {
-  final List<String> _colorNames = ['Rojo', 'Verde', 'Azul', 'Amarillo', 'Naranja'];
-  final List<Color> _colors = [Colors.red, Colors.green, Colors.blue, Colors.yellow, Colors.orange];
+  final List<String> _colorNames = ['Rojo', 'Verde', 'Azul','Naranja'];
+  final List<Color> _colors = [Colors.red, Colors.green, Colors.blue, Colors.orange];
   late String _currentColorName;
   late Color _currentColorText;
   late List<Color> _answerOptions;
@@ -119,7 +119,7 @@ Widget build(BuildContext context) {
     body: Container(
       width: double.infinity,
       height: double.infinity,
-      color: Color(0xFF313866), // Color de fondo
+      color: Colores.bgColor, // Color de fondo
       child: _isGameOver
           ? Center( // Centra los elementos
               child: Column(
@@ -178,9 +178,9 @@ Widget build(BuildContext context) {
                       onPressed: () => _checkAnswer(color),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: color,
-                        foregroundColor: Colors.white, // Contraste
+                         // Contraste
                       ),
-                      child: Icon(Icons.circle, color: Colors.white),
+                      child:SizedBox(),
                     );
                   }).toList(),
                 ),

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:resapp/games/RazGame/razgMenu.dart';
 import 'package:resapp/util/NavBar.dart';
 //constants
 import 'package:resapp/constants/colors.dart';
@@ -241,7 +242,7 @@ class _MainMenu extends State<MainMenu>{
                           );
                         },),
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => RazGame()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RazGameMenu()));
                     },
                   ),
                 ),

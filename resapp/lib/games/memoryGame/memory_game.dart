@@ -126,25 +126,58 @@ class _MemoryGameState extends State<MemoryGame> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colores.pColor,
-        title: Text('Juego de Patrón de Memoria', style: TextStyle(color: Colores.txtColor),),
+@override
+Widget build(BuildContext context) {
+  // Obtener el tamaño de la pantalla
+  final screenWidth = MediaQuery.of(context).size.width;
+  final screenHeight = MediaQuery.of(context).size.height;
+
+  // Reducir el tamaño máximo del tablero con un factor de escala
+  final scaleFactor = 0.8; // Ajusta este factor para reducir el tamaño del tablero
+  final boardSize = (screenWidth < screenHeight
+          ? screenWidth - 32
+          : screenHeight - 120) *
+      scaleFactor; // Escalar el tamaño máximo
+
+  final squareSize = boardSize / gridSize; // Tamaño de cada celda
+
+  return Scaffold(
+    appBar: AppBar(
+      backgroundColor: Colores.pColor,
+      title: Text(
+        'Juego de Patrón de Memoria',
+        style: TextStyle(color: Colores.txtColor),
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(top:50,left: 32,right: 32,bottom:0 ),
+    ),
+    body: Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.white,Colors.grey],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+      child: Center(
+        
         child: Column(
+          
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Mostrar la puntuación
-            Text(
-              'Puntuación: $score',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: Text(
+                'Puntuación: $score',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
             ),
-            SizedBox(height: 50,),
-            Expanded(
+            // Tablero de juego ajustado
+            Container(
+              
+              width: boardSize,
+              height: boardSize,
               child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(), // Deshabilitar desplazamiento
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: gridSize,
                   crossAxisSpacing: 4.0,
@@ -154,15 +187,18 @@ class _MemoryGameState extends State<MemoryGame> {
                 itemBuilder: (context, index) {
                   bool isPatternSquare = pattern.contains(index);
                   bool isUserSelected = userSelection[index];
-
+      
                   return GestureDetector(
                     onTap: () => _checkSelection(index),
                     child: Container(
-                      color: showPattern && isPatternSquare
-                          ? Colors.green
-                          : isUserSelected
-                              ? Colors.blue
-                              : Colors.grey[300],
+                      decoration: BoxDecoration(
+                        color: showPattern && isPatternSquare
+                            ? Colors.red
+                            : isUserSelected
+                                ? Colors.green
+                                : Colores.pColor,
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                     ),
                   );
                 },
@@ -171,6 +207,10 @@ class _MemoryGameState extends State<MemoryGame> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
 }
+
+    
+  }
+
