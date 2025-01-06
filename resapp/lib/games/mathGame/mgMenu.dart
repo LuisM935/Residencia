@@ -28,14 +28,14 @@ class MathGameMenu extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildInstructionCard(
-                    text: 'Si respondes correctamente a la operación, sumas un punto.',
+                    text: 'Responde correctamente todas las operaciones posibles en un minuto.',
                     backgroundColor: Colors.green,
                   ),
                 ),
                 const SizedBox(width: 10), // Espaciado entre los contenedores
                 Expanded(
                   child: _buildInstructionCard(
-                    text: 'Si el tiempo se acaba, el juego se da por terminado.',
+                    text: 'El juego acaba cuando el tiempo termina.',
                     backgroundColor: Colors.red,
                   ),
                 ),
@@ -50,6 +50,7 @@ class MathGameMenu extends StatelessWidget {
                 color: Colors.red,
               ),
               textAlign: TextAlign.center,
+              
             ),
             const SizedBox(height: 20),
             Row(
@@ -61,10 +62,11 @@ class MathGameMenu extends StatelessWidget {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => MathGame()));
                   },
                   style: ElevatedButton.styleFrom(
+                    
                     backgroundColor: Colores.pColor,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 30.0,
-                      vertical: 10.0,
+                      horizontal: 50.0,
+                      vertical: 20.0,
                     ),
                   ),
                   child: const Text(
@@ -79,8 +81,8 @@ class MathGameMenu extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colores.pColor,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 30.0,
-                      vertical: 10.0,
+                      horizontal: 50.0,
+                      vertical: 20.0,
                     ),
                   ),
                   child: const Text(
@@ -102,8 +104,10 @@ class MathGameMenu extends StatelessWidget {
     required Color backgroundColor,
   }) {
     return Container(
+      
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
+        
         color: backgroundColor,
         borderRadius: BorderRadius.circular(16.0),
       ),

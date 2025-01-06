@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
+import 'package:resapp/constants/mathlevel.dart';
 import 'package:resapp/pages/menu.dart';
 import 'package:flutter/foundation.dart';
 //Firebase
@@ -21,7 +22,7 @@ class _MathGameState extends State<MathGame> {
   int correctAnswer = 0; // Valor predeterminado.
   List<int> options = []; // Valor predeterminado.
   late Timer timer;
-  int timeLeft = 5; // Tiempo límite por pregunta.
+  int timeLeft = 60; // Tiempo límite por pregunta.
   bool isGameOver = false;
   int score = 0; //Puntuacion actual
   int mathGameRecord = 0; //Record de juego
@@ -137,10 +138,10 @@ void startTimer() {
     });
   }
 
-  void checkAnswer(int selectedAnswer) {
+void checkAnswer(int selectedAnswer) {
     if (selectedAnswer == correctAnswer) {
       setState(() {
-        timeLeft = 5 ; // Reiniciar tiempo.
+        
         score++;
 if (score > mathGameRecord) {
   mathGameRecord = score;
@@ -148,7 +149,7 @@ if (score > mathGameRecord) {
   
   // Actualizar el récord en Firestore
   GameService().saveGameRecord(gameId: gameId, record: mathGameRecord);
-}
+  }
 
 
         generateNewQuestion(); // Generar nueva pregunta.
@@ -156,6 +157,22 @@ if (score > mathGameRecord) {
       });
     } 
   }
+
+String userLevel(){
+  if (score >= 50){
+    return "Avanzado \n" + Levels.Avanzado;
+  }
+  else if(score >= 30 && score < 50){
+    return "Intermedio \n" + Levels.Intermedio; 
+      
+  }
+  else if(score > 0 && score < 30 ){
+    return "Bajo \n " + Levels.Bajo;
+  }
+
+
+  return "Bajo \n " + Levels.Bajo;
+}
 
 @override
 Widget build(BuildContext context) {
@@ -180,21 +197,40 @@ Widget build(BuildContext context) {
                   style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.right,
                 ),
+                SizedBox(height: 50,),
+                Container(
+                  padding: const EdgeInsets.all(15.0),
+                  width: 300,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colores.pColor,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Text(
+                        'Nivel: ${userLevel()}',
+                        style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                  ),
+                ),
                 SizedBox(height: 50),
                 ElevatedButton(
                   child: Text('Reiniciar', style: TextStyle(color: Colors.white, fontSize: 20)),
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(200, 50),
                     backgroundColor: Colores.pColor,
-                    padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                   ),
                   onPressed: () {
                     setState(() {
                       isGameOver = false;
-                      timeLeft = 5;
+                      timeLeft = 60;
                       generateNewQuestion();
                       startTimer();
+                      
                       score = 0;
                     });
                   },
