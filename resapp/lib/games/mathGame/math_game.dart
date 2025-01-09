@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
-import 'package:resapp/constants/mathlevel.dart';
+import 'package:resapp/constants/evaluation.dart';
 import 'package:resapp/pages/menu.dart';
 import 'package:flutter/foundation.dart';
 //Firebase
@@ -160,18 +160,18 @@ if (score > mathGameRecord) {
 
 String userLevel(){
   if (score >= 50){
-    return "Avanzado \n" + Levels.Avanzado;
+    return "Avanzado \n" + MathLevels.Avanzado;
   }
   else if(score >= 30 && score < 50){
-    return "Intermedio \n" + Levels.Intermedio; 
+    return "Intermedio \n" + MathLevels.Intermedio; 
       
   }
   else if(score > 0 && score < 30 ){
-    return "Bajo \n " + Levels.Bajo;
+    return "Bajo \n " + MathLevels.Bajo;
   }
 
 
-  return "Bajo \n " + Levels.Bajo;
+  return "Bajo \n " + MathLevels.Bajo;
 }
 
 @override

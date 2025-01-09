@@ -14,7 +14,7 @@ import 'package:resapp/games/mathGame/mgMenu.dart';
 //MemoryGame
 import 'package:resapp/games/memoryGame/memgMenu.dart';
 //RazGame
-import 'package:resapp/games/RazGame/raz_game.dart';
+import 'package:resapp/games/RazGame/razgMenu.dart';
 
 
 class MainMenu extends StatefulWidget{
@@ -241,7 +241,7 @@ class _MainMenu extends State<MainMenu>{
                           );
                         },),
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => RazGame()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RazGameMenu()));
                     },
                   ),
                 ),

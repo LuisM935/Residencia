@@ -20,7 +20,7 @@ class RazGameMenu extends StatelessWidget {
           children: [
             const SizedBox(height: 50),
             _buildInstructionCard(
-              text: 'Analiza las analogías presentadas, y selecciona la resputa correcta',
+              text: 'Analiza las analogías presentadas, y selecciona la respuesta correcta',
               backgroundColor: Colores.pColor,
             ),
             const SizedBox(height: 10),

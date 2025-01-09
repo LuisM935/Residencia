@@ -3,6 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
 import 'package:resapp/pages/menu.dart';
+import 'package:resapp/constants/evaluation.dart';
+
+
+
 
 
 
@@ -11,14 +15,18 @@ class RazGame extends StatefulWidget {
   _RazGameState createState() => _RazGameState();
 }
 
+
 class _RazGameState extends State<RazGame> {
   int _timeLeft = 60;
   int _score = 0;
+  int _totalQuestions = 0; // Para contar el total de analogías hechas
+  int _totalCorrect = 0; // Para contar los aciertos
+  double _avgResponseTime = 0; // Para calcular el tiempo promedio de respuesta
+  int _startTime = 0; // Para medir el tiempo de respuesta por analogía
   late Timer _timer;
   bool _isGameOver = false;
   final Random _random = Random();
 
-  // Lista ampliada de categorías con más palabras
   List<Map<String, List<String>>> categories = [
     {
       'Fruta': ['Manzana', 'Banana', 'Naranja', 'Pera', 'Uva', 'Kiwi', 'Sandía', 'Cereza', 'Mango', 'Piña'],
@@ -36,51 +44,42 @@ class _RazGameState extends State<RazGame> {
   Map<String, String> currentAnalogy = {};
   List<String> options = [];
 
-  // Temporizador
-void _startTimer() {
-  _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-    if (_timeLeft == 0) {
-      _endGame();
-    } else {
-      if (mounted) { // Verificamos si el widget está montado antes de llamar a setState
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_timeLeft == 0) {
+        _endGame();
+      } else {
         setState(() {
           _timeLeft--;
         });
       }
-    }
-  });
-}
+    });
+  }
 
-void _endGame() {
-  if (mounted) { // Verificamos si el widget está montado antes de llamar a setState
+  void _endGame() {
     setState(() {
       _isGameOver = true;
     });
+    _timer.cancel();
   }
-  _timer.cancel();
-}
 
-void _resetGame() {
-  if (mounted) { // Verificamos si el widget está montado antes de llamar a setState
+  void _resetGame() {
     setState(() {
       _score = 0;
       _timeLeft = 60;
+      _totalQuestions = 0;
+      _totalCorrect = 0;
+      _avgResponseTime = 0;
       _isGameOver = false;
     });
+    _generateRandomAnalogy();
+    _startTimer();
   }
-  _generateRandomAnalogy();
-  _startTimer();
-}
 
-
-
-
-  // Generar una analogía aleatoria
   void _generateRandomAnalogy() {
     var category1 = categories[0].keys.toList()[_random.nextInt(categories[0].length)];
     var category2 = categories[0].keys.toList()[_random.nextInt(categories[0].length)];
 
-    // Asegurarse de que las categorías sean diferentes
     while (category1 == category2) {
       category2 = categories[0].keys.toList()[_random.nextInt(categories[0].length)];
     }
@@ -94,36 +93,46 @@ void _resetGame() {
         'correctAnswer': category2
       };
 
-      // Generar opciones de respuesta
       options = [category1, category2];
-
-      // Añadir más categorías sin duplicar
       while (options.length < 4) {
         var newCategory = categories[0].keys.toList()[_random.nextInt(categories[0].length)];
         if (!options.contains(newCategory)) {
           options.add(newCategory);
         }
       }
-
-      // Mezclar las opciones para evitar que siempre aparezcan en el mismo orden
       options.shuffle();
+      _startTime = DateTime.now().millisecondsSinceEpoch; // Marca el inicio de la respuesta
     });
   }
 
-  // Verificar la respuesta seleccionada
   void _checkAnswer(String selectedAnswer) {
-    if (selectedAnswer == currentAnalogy['correctAnswer']) {
-      setState(() {
-        _score++; // Incrementar la puntuación
-      });
-      _generateRandomAnalogy(); // Generar una nueva analogía si la respuesta es correcta
-    }
+    setState(() {
+      _totalQuestions++;
+      int endTime = DateTime.now().millisecondsSinceEpoch;
+      _avgResponseTime = ((_avgResponseTime * (_totalQuestions - 1)) + ((endTime - _startTime) / 1000)) / _totalQuestions;
+
+      if (selectedAnswer == currentAnalogy['correctAnswer']) {
+        _score++;
+        _totalCorrect++;
+      }
+      _generateRandomAnalogy();
+    });
+  }
+
+  String calculatePerformanceLevel() {
+    double accuracy = (_totalQuestions == 0) ? 0 : (_totalCorrect / _totalQuestions) * 100;
+
+    if (_totalCorrect >= 30 && _avgResponseTime <= 2) {
+      return "Avanzado \n" + RazLevels.Avanzado;
+    } else if (_totalCorrect >= 15 && _totalCorrect < 30 && _avgResponseTime <= 3) {
+      return "Intermedio \n" + RazLevels.Intermedio;
+    } else return "Bajo \n" + RazLevels.Bajo;
   }
 
   @override
   void initState() {
     super.initState();
-    _generateRandomAnalogy(); // Inicializar el primer conjunto de analogías
+    _generateRandomAnalogy();
     _startTimer();
   }
 
@@ -135,30 +144,64 @@ void _resetGame() {
         backgroundColor: Colores.pColor,
       ),
       body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colores.bgColor, const Color.fromARGB(255, 202, 186, 144)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+        decoration: BoxDecoration(color: Colores.bgColor),
         padding: const EdgeInsets.all(20.0),
-        child: _isGameOver
+child: _isGameOver
             ? Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      '¡Se acabó el tiempo!',
-                      style: TextStyle(fontSize: 30, color: Colors.black),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      'Puntuación: $_score',
-                      style: TextStyle(fontSize: 20, color: Colors.red),
-                    ),
+                      Text('¡Se acabó el tiempo!', style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold)),
+                      Text('Puntuación: $_score', style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 50,),
+                      Container(
+                        padding: const EdgeInsets.all(15.0),
+                        width: 300,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Colores.pColor,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Text('Nivel: ${calculatePerformanceLevel()}', 
+                        style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                        ))
+                        
+                        ),
+
+                        SizedBox(height: 50,),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Precisión: ',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                            ),
+                            TextSpan(
+                              text: '${((_totalCorrect / _totalQuestions) * 100).toStringAsFixed(2)}%',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Tiempo promedio: ',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                            ),
+                            TextSpan(
+                              text: '${_avgResponseTime.toStringAsFixed(2)} segundos',
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
+                            ),
+                          ],
+                        ),
+                      ),
+
                     SizedBox(height: 50),
                     ElevatedButton(
                       onPressed: _resetGame,
@@ -194,7 +237,7 @@ void _resetGame() {
                   ],
                 ),
               )
-            : Column(
+              : Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -240,9 +283,222 @@ void _resetGame() {
       ),
     );
   }
+
   @override
-void dispose() {
-  _timer.cancel(); // Cancelamos el temporizador cuando el widget se destruye
-  super.dispose(); // Llamamos a dispose del padre
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
 }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
