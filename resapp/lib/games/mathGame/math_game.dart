@@ -52,7 +52,7 @@ Future<void> _getMathGameRecord() async {
     print('Recuperando el récord para el usuario: $userId');
     
     // Llamar al servicio para obtener el récord
-    int? record = await GameService().getMathGameRecord(userId);
+    int? record = await GameService().getGameRecord(userId);
 
     // Verificar el valor que se ha recuperado
     print('Recibido el récord: $record');
@@ -143,16 +143,16 @@ void checkAnswer(int selectedAnswer) {
       setState(() {
         
         score++;
-if (score > mathGameRecord) {
-  mathGameRecord = score;
-  print("Nuevo récord alcanzado: $mathGameRecord");
-  
-  // Actualizar el récord en Firestore
-  GameService().saveGameRecord(gameId: gameId, record: mathGameRecord);
-  }
+        if (score > mathGameRecord) {
+          mathGameRecord = score;
+          print("Nuevo récord alcanzado: $mathGameRecord");
+          
+          // Actualizar el récord en Firestore
+          GameService().saveGameRecord(gameId: gameId, record: mathGameRecord);
+          }
 
 
-        generateNewQuestion(); // Generar nueva pregunta.
+                generateNewQuestion(); // Generar nueva pregunta.
        
       });
     } 

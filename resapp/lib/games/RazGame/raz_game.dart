@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
 import 'package:resapp/pages/menu.dart';
 import 'package:resapp/constants/evaluation.dart';
+import 'package:resapp/services/userscores_service.dart';
 
 
 
@@ -26,6 +28,9 @@ class _RazGameState extends State<RazGame> {
   late Timer _timer;
   bool _isGameOver = false;
   final Random _random = Random();
+  //Firebase stuff
+  int razGameRecord = 0;
+  String gameId = "reasoningGame";
 
   List<Map<String, List<String>>> categories = [
     {
@@ -43,6 +48,28 @@ class _RazGameState extends State<RazGame> {
 
   Map<String, String> currentAnalogy = {};
   List<String> options = [];
+
+  Future<void> _getRazGameRecord() async {
+  try {
+    // Obtener el userId desde Firebase Authentication
+    String userId = FirebaseAuth.instance.currentUser?.uid ?? 'default_user';
+    print('Recuperando el récord para el usuario: $userId');
+    
+    // Llamar al servicio para obtener el récord
+    int? record = await GameService().getGameRecord(userId);
+
+    // Verificar el valor que se ha recuperado
+    print('Recibido el récord: $record');
+    
+    // Actualizar el estado con el récord recuperado
+    setState(() {
+      razGameRecord = record ?? 0; // Si el récord es null, asignar 0
+    });
+
+  } catch (e) {
+    print('Error al obtener el récord: $e');
+  }
+}
 
   void _startTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -112,8 +139,18 @@ class _RazGameState extends State<RazGame> {
       _avgResponseTime = ((_avgResponseTime * (_totalQuestions - 1)) + ((endTime - _startTime) / 1000)) / _totalQuestions;
 
       if (selectedAnswer == currentAnalogy['correctAnswer']) {
-        _score++;
-        _totalCorrect++;
+        setState(() {
+          _score++;
+          _totalCorrect++;
+          if (_score > razGameRecord) {
+            razGameRecord = _score;
+            print("Nuevo récord alcanzado: $razGameRecord");
+            
+            // Actualizar el récord en Firestore
+            GameService().saveGameRecord(gameId: gameId, record: razGameRecord);
+          }
+        });
+        
       }
       _generateRandomAnalogy();
     });
@@ -129,6 +166,7 @@ class _RazGameState extends State<RazGame> {
     } else return "Bajo \n" + RazLevels.Bajo;
   }
 
+  
   @override
   void initState() {
     super.initState();
@@ -290,215 +328,4 @@ child: _isGameOver
     super.dispose();
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

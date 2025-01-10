@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
 import 'package:resapp/games/RazGame/raz_game.dart';
-import 'package:resapp/games/memoryGame/memory_game.dart';
 import 'package:resapp/pages/menu.dart';
 
 class RazGameMenu extends StatelessWidget {

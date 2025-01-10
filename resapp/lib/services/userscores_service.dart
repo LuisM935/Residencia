@@ -31,7 +31,7 @@ class GameService {
 
 
   // Método para obtener el récord de puntuación del juego de matemáticas
-Future<int?> getMathGameRecord(String userId) async {
+Future<int?> getGameRecord(String userId) async {
   try {
     // Acceder al documento del usuario en Firestore
     DocumentReference userDocRef = FirebaseFirestore.instance.collection('users').doc(userId);
@@ -50,10 +50,14 @@ Future<int?> getMathGameRecord(String userId) async {
           int record = records['mathGame'];  // Accede al campo mathGame dentro del mapa 'records'
           print('Récord recuperado desde Firestore: $record');
           return record;
+        }else if(records.containsKey('reasoningGame')){
+          int record = records['reasoningGame'];
         }else if(records.containsKey('memoryGame')){
           int record = records['memoryGame'];
+        }else if(records.containsKey('attentionGame')){
+          int record = records['attentionGame'];
         } else {
-          print('El campo mathGame no está presente dentro de records, devolviendo 0');
+          print('El campo -- no está presente dentro de records, devolviendo 0');
           return 0;  // Si no se encuentra el campo mathGame, devuelve 0
         }
       } else {

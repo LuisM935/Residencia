@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
 import 'package:resapp/constants/colors.dart';
+import 'package:resapp/services/userscores_service.dart';
 
 class MemoryGame extends StatefulWidget {
   @override
@@ -17,6 +19,31 @@ class _MemoryGameState extends State<MemoryGame> {
   int patternLength = 5;
   int score = 0; // Variable para la puntuación
 
+  int memGameRecord = 0;
+  String gameId = "memoryGame";
+
+
+  Future<void> _getMemGameRecord() async {
+    try {
+    // Obtener el userId desde Firebase Authentication
+    String userId = FirebaseAuth.instance.currentUser?.uid ?? 'default_user';
+    print('Recuperando el récord para el usuario: $userId');
+    
+    // Llamar al servicio para obtener el récord
+    int? record = await GameService().getGameRecord(userId);
+
+    // Verificar el valor que se ha recuperado
+    print('Recibido el récord: $record');
+    
+    // Actualizar el estado con el récord recuperado
+    setState(() {
+      memGameRecord = record ?? 0; // Si el récord es null, asignar 0
+    });
+
+  } catch (e) {
+    print('Error al obtener el récord: $e');
+  }
+}
 
   @override
   void initState() {
@@ -24,6 +51,8 @@ class _MemoryGameState extends State<MemoryGame> {
     _generatePattern();
     _startGame();
   }
+
+
 
   void _generatePattern() {
     pattern.clear();
@@ -68,7 +97,13 @@ class _MemoryGameState extends State<MemoryGame> {
     if (_isGameWon()) {
       setState(() {
         score++;
-
+        if (score > memGameRecord) {
+            memGameRecord = score;
+            print("Nuevo récord alcanzado: $memGameRecord");
+            
+            // Actualizar el récord en Firestore
+            GameService().saveGameRecord(gameId: gameId, record: memGameRecord);
+          }
         _resetGame(); // Incrementa la puntuación cuando acierta toda la matriz
       });
      
@@ -119,6 +154,7 @@ class _MemoryGameState extends State<MemoryGame> {
   }
 
   void _resetGame() {
+    
     setState(() {
       userSelection = List.filled(gridSize * gridSize, false);
       _generatePattern();
