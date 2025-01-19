@@ -19,5 +19,24 @@ class RazLevels{
   static String Bajo = "Tu razonamiento está por debajo del promedio. Esfuérzate para mejorar y continúa practicando.";
 }
 
+class MemLevels{
+  
+  static String Avanzado = "Posees una excelente habilidad cognitiva, con rapidez y alta precisión.";
+  
+  
+  static String Intermedio = "Tienes una comprensión razonable, aunque podrían mejorar en rapidez o precisión.";
+
+  static String Bajo = "Tu razonamiento está por debajo del promedio. Esfuérzate para mejorar y continúa practicando.";
+}
+
+class AttLevels{
+  
+  static String Avanzado = "Posees una excelente habilidad cognitiva, con rapidez y alta precisión.";
+  
+  
+  static String Intermedio = "Tienes una comprensión razonable, aunque podrían mejorar en rapidez o precisión.";
+
+  static String Bajo = "Tu razonamiento está por debajo del promedio. Esfuérzate para mejorar y continúa practicando.";
+}
 
 /*  */

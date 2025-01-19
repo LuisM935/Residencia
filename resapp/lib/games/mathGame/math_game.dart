@@ -52,7 +52,7 @@ Future<void> _getMathGameRecord() async {
     print('Recuperando el récord para el usuario: $userId');
     
     // Llamar al servicio para obtener el récord
-    int? record = await GameService().getGameRecord(userId);
+    int? record = await GameService().getGameRecord(userId,gameId);
 
     // Verificar el valor que se ha recuperado
     print('Recibido el récord: $record');

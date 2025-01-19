@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
 import 'package:resapp/constants/colors.dart';
+import 'package:resapp/pages/menu.dart';
 import 'package:resapp/services/userscores_service.dart';
+import 'package:resapp/constants/evaluation.dart';
 
 class MemoryGame extends StatefulWidget {
   @override
@@ -18,6 +20,7 @@ class _MemoryGameState extends State<MemoryGame> {
   bool gameActive = false;
   int patternLength = 5;
   int score = 0; // Variable para la puntuación
+  int tempscore = 0;
 
   int memGameRecord = 0;
   String gameId = "memoryGame";
@@ -30,7 +33,7 @@ class _MemoryGameState extends State<MemoryGame> {
     print('Recuperando el récord para el usuario: $userId');
     
     // Llamar al servicio para obtener el récord
-    int? record = await GameService().getGameRecord(userId);
+     int? record = await GameService().getGameRecord(userId, gameId);
 
     // Verificar el valor que se ha recuperado
     print('Recibido el récord: $record');
@@ -50,6 +53,8 @@ class _MemoryGameState extends State<MemoryGame> {
     super.initState();
     _generatePattern();
     _startGame();
+    _getMemGameRecord();
+    
   }
 
 
@@ -104,14 +109,14 @@ class _MemoryGameState extends State<MemoryGame> {
             // Actualizar el récord en Firestore
             GameService().saveGameRecord(gameId: gameId, record: memGameRecord);
           }
-        _resetGame(); // Incrementa la puntuación cuando acierta toda la matriz
+        _resetGame(); 
       });
      
       
     } else if (_isGameLost()) {
-      
-      _showResultDialog("¡Perdiste! Puntuación: $score");
+      tempscore = score;
       score = 0;
+      
     }
   }
 
@@ -133,24 +138,8 @@ class _MemoryGameState extends State<MemoryGame> {
     return false;
   }
 
-  void _showResultDialog(String result) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(result),
-          actions: [
-            TextButton(
-              child: Text("Reiniciar"),
-              onPressed: () {
-                Navigator.of(context).pop();
-                _resetGame();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  void resetScore(){
+    score = 0;
   }
 
   void _resetGame() {
@@ -161,7 +150,21 @@ class _MemoryGameState extends State<MemoryGame> {
       _startGame();
     });
   }
+  
 
+
+  String valoracion(){
+
+    if (tempscore >= 7 ){
+
+      return "Avanzado \n" + MemLevels.Avanzado;
+
+    }else if (tempscore > 5 ){
+      return "Intermedio \n" + MemLevels.Intermedio;
+    }
+
+    return "Bajo \n" + MemLevels.Bajo;
+  }
 @override
 Widget build(BuildContext context) {
   // Obtener el tamaño de la pantalla
@@ -193,7 +196,68 @@ Widget build(BuildContext context) {
             end: Alignment.bottomRight,
           ),
         ),
-      child: Center(
+
+        child: _isGameLost() ? 
+        Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                      Text('¡Se acabó el tiempo!', style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold)),
+                      Text('Puntuación: $tempscore', style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 50,),
+                      Container(
+                        padding: const EdgeInsets.all(15.0),
+                        width: 300,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Colores.pColor,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Text('Nivel: ${valoracion()}',
+                        style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                        ))
+                        
+                        ),
+
+                        SizedBox(height: 50,),
+                      ElevatedButton(
+                        onPressed: _resetGame,
+                        child: Text('Reiniciar', style: TextStyle(color: Colores.txtColor, fontSize: 20)),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(300, 50),
+                          backgroundColor: Colores.pColor,
+                          padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                        ),
+                    ),
+                    SizedBox(height: 50),
+                    ElevatedButton(
+                      onPressed: () {
+                                // Navegar al menú principal (a la pantalla 'menu.dart')
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => MainMenu()), // Asegúrate de tener la clase Menu importada
+                                );
+                              },
+                      child: Text('Volver al Menú', style: TextStyle(color: Colores.txtColor, fontSize: 20)),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(300, 50),
+                        backgroundColor: Colores.pColor,
+                        padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
+                    ),
+            ]),
+        )
+        
+        : Center(
         
         child: Column(
           

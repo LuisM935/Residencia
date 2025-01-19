@@ -49,14 +49,14 @@ class _RazGameState extends State<RazGame> {
   Map<String, String> currentAnalogy = {};
   List<String> options = [];
 
-  Future<void> _getRazGameRecord() async {
-  try {
+Future<void> _getRazGameRecord() async {
+    try {
     // Obtener el userId desde Firebase Authentication
     String userId = FirebaseAuth.instance.currentUser?.uid ?? 'default_user';
     print('Recuperando el récord para el usuario: $userId');
     
     // Llamar al servicio para obtener el récord
-    int? record = await GameService().getGameRecord(userId);
+    int? record = await GameService().getGameRecord(userId, gameId);
 
     // Verificar el valor que se ha recuperado
     print('Recibido el récord: $record');
@@ -132,29 +132,35 @@ class _RazGameState extends State<RazGame> {
     });
   }
 
-  void _checkAnswer(String selectedAnswer) {
-    setState(() {
-      _totalQuestions++;
-      int endTime = DateTime.now().millisecondsSinceEpoch;
-      _avgResponseTime = ((_avgResponseTime * (_totalQuestions - 1)) + ((endTime - _startTime) / 1000)) / _totalQuestions;
+void _checkAnswer(String selectedAnswer) async {
+  int endTime = DateTime.now().millisecondsSinceEpoch;
 
-      if (selectedAnswer == currentAnalogy['correctAnswer']) {
-        setState(() {
-          _score++;
-          _totalCorrect++;
-          if (_score > razGameRecord) {
-            razGameRecord = _score;
-            print("Nuevo récord alcanzado: $razGameRecord");
-            
-            // Actualizar el récord en Firestore
-            GameService().saveGameRecord(gameId: gameId, record: razGameRecord);
-          }
-        });
-        
+  // Calcular el tiempo de respuesta
+  double newResponseTime = (endTime - _startTime) / 1000;
+  _avgResponseTime = ((_avgResponseTime * _totalQuestions) + newResponseTime) / (_totalQuestions + 1);
+
+  setState(() {
+    _totalQuestions++;
+
+    // Verificar si la respuesta es correcta
+    if (selectedAnswer == currentAnalogy['correctAnswer']) {
+      _score++;
+      _totalCorrect++;
+
+      // Si se supera el récord, actualízalo y guárdalo en Firebase
+      if (_score > razGameRecord) {
+        razGameRecord = _score;
+
+        // Llamar al servicio para guardar el récord
+        GameService().saveGameRecord(gameId: gameId, record: razGameRecord);
       }
-      _generateRandomAnalogy();
-    });
-  }
+    }
+
+    // Generar una nueva analogía
+    _generateRandomAnalogy();
+  });
+}
+
 
   String calculatePerformanceLevel() {
     double accuracy = (_totalQuestions == 0) ? 0 : (_totalCorrect / _totalQuestions) * 100;
@@ -172,6 +178,7 @@ class _RazGameState extends State<RazGame> {
     super.initState();
     _generateRandomAnalogy();
     _startTimer();
+    _getRazGameRecord();
   }
 
   @override
@@ -184,7 +191,7 @@ class _RazGameState extends State<RazGame> {
       body: Container(
         decoration: BoxDecoration(color: Colores.bgColor),
         padding: const EdgeInsets.all(20.0),
-child: _isGameOver
+        child: _isGameOver
             ? Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

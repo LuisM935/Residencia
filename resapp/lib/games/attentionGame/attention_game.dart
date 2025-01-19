@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
+import 'package:resapp/constants/evaluation.dart';
+import 'package:resapp/services/userscores_service.dart';
 
 class AttentionGame extends StatefulWidget {
   @override
@@ -22,11 +25,40 @@ class _AttentionGameState extends State<AttentionGame> {
   // Probabilidad de que el nombre del color coincida con el color (0.0 a 1.0)
   double _matchProbability = 0.3;
 
+
+  int attGameRecord = 0;
+  String gameId = "attentionGame";
+
+
+
+  Future<void> _getAttGameRecord() async {
+    try {
+    // Obtener el userId desde Firebase Authentication
+    String userId = FirebaseAuth.instance.currentUser?.uid ?? 'default_user';
+    print('Recuperando el récord para el usuario: $userId');
+    
+    // Llamar al servicio para obtener el récord
+    int? record = await GameService().getGameRecord(userId, gameId);
+
+    // Verificar el valor que se ha recuperado
+    print('Recibido el récord: $record');
+    
+    // Actualizar el estado con el récord recuperado
+    setState(() {
+      attGameRecord = record ?? 0; // Si el récord es null, asignar 0
+    });
+
+  } catch (e) {
+    print('Error al obtener el récord: $e');
+  }
+}
+
   @override
   void initState() {
     super.initState();
     _generateRandomColor();
     _startTimer();
+    _getAttGameRecord();
   }
 
   // Generar el color y el texto del nombre con opciones de respuesta
@@ -88,6 +120,13 @@ class _AttentionGameState extends State<AttentionGame> {
     if (isCorrect) {
       setState(() {
         _score++;
+        if (_score > attGameRecord) {
+            attGameRecord = _score;
+            print("Nuevo récord alcanzado: $attGameRecord");
+            
+            // Actualizar el récord en Firestore
+            GameService().saveGameRecord(gameId: gameId, record: attGameRecord);
+          }
       });
     } else {
 
@@ -107,7 +146,20 @@ class _AttentionGameState extends State<AttentionGame> {
     _startTimer();
   }
 
-  @override
+    String valoracion(){
+
+    if (_score >= 70 ){
+
+      return "Avanzado \n" + AttLevels.Avanzado;
+
+    }else if (_score >= 50 ){
+      return "Intermedio \n" + AttLevels.Intermedio;
+    }
+
+    return "Bajo \n" + AttLevels.Bajo;
+  }
+
+
 @override
 Widget build(BuildContext context) {
   return Scaffold(
