@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
 import 'package:resapp/constants/evaluation.dart';
+import 'package:resapp/pages/menu.dart';
 import 'package:resapp/services/userscores_service.dart';
 
 class AttentionGame extends StatefulWidget {
@@ -173,38 +174,65 @@ Widget build(BuildContext context) {
       height: double.infinity,
       color: Colores.bgColor, // Color de fondo
       child: _isGameOver
-          ? Center( // Centra los elementos
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    '¡Se acabó el tiempo!',
-                    style: TextStyle(fontSize: 30, color: Colors.black),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Puntuación: $_score',
-                    style: TextStyle(fontSize: 20, color: Colors.red),
-                  ),
-                  SizedBox(height: 50),
-                  ElevatedButton(
-                    onPressed: _resetGame,
-                    child: Text('Reiniciar', style: TextStyle(color: Colores.txtColor, fontSize: 20),),
-                    style: ElevatedButton.styleFrom(
+          ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                      Text('¡Se acabó el tiempo!', style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold)),
+                      Text('Puntuación: $_score', style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 50,),
+                      Container(
+                        padding: const EdgeInsets.all(15.0),
+                        width: 300,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Colores.pColor,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Text('Nivel: ${valoracion()}',
+                        style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                        ))
+                        
+                        ),
+
+                        SizedBox(height: 50,),
+                      ElevatedButton(
+                        onPressed: _resetGame,
+                        child: Text('Reiniciar', style: TextStyle(color: Colores.txtColor, fontSize: 20)),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(300, 50),
+                          backgroundColor: Colores.pColor,
+                          padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                        ),
+                    ),
+                    SizedBox(height: 50),
+                    ElevatedButton(
+                      onPressed: () {
+                                // Navegar al menú principal (a la pantalla 'menu.dart')
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => MainMenu()), // Asegúrate de tener la clase Menu importada
+                                );
+                              },
+                      child: Text('Volver al Menú', style: TextStyle(color: Colores.txtColor, fontSize: 20)),
+                      style: ElevatedButton.styleFrom(
                         minimumSize: Size(300, 50),
-                      backgroundColor: Colores.pColor, 
-                       
-                      padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-                      
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ))
-                    
-                    
-                  ),
-                ],
-              ),
-            )
+                        backgroundColor: Colores.pColor,
+                        padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                      ),
+                    ),
+            ]),
+        )
+        
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

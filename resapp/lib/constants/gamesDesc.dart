@@ -1,27 +1,62 @@
 import 'package:flutter/material.dart';
 
+class Game {
+  final String id; // Este es el campo 'id' que usaremos para identificar cada juego
+  final String title;
+  final String subtitle;
+  final Color backgroundColor;
+  final IconData icon;
+  final String dialogTitle;
+  final String description;
 
-class Description{
-  static const MemGDesc = Text('Beneficios: \n'
-                                'Fortalece la capacidad de recordar información de manera temporal y a corto plazo. \n'
-                                'Potencia la capacidad para almacenar, procesar y manipular información. \n'
-                                'Ayuda a desarrollar la percepción espacial.\n'
-                                'Fomenta el pensamiento lógico y estratégico.\n',style: TextStyle(fontSize:18,color: Colors.black, fontWeight: FontWeight.bold),);
-
-
-  static const MathGameDesc = Text('Beneficios: \n'
-                                'Resolver operaciones mejora la habilidad para aplicar reglas y métodos sistemáticos para llegar a una solución.\n'
-                                'Mejora la capacidad de concentración y de mantener la atención durante períodos más largos, lo cual es útil en actividades académicas y laborales. \n'
-                                'Mejora la velocidad de procesamiento cognitivo y la habilidad para resolver problemas bajo presión.\n'
-                                'Ayuda a prevenir el deterioro cognitivo relacionado con la edad, como el Alzheimer o la demencia. \n',style: TextStyle(fontSize:18,color: Colors.black, fontWeight: FontWeight.bold),);
-  static const AttentionGameDesc = Text('Beneficios: \n'
-  'Mejora el autocontrol y la capacidad para evitar distracciones en situaciones de conflicto. \n'
-  'Estimula la rapidez con la que el cerebro maneja información compleja, lo que puede resultar en una mayor eficiencia mental y capacidad para tomar decisiones. \n'
-  'Ayuda a desarrollar el control de los impulsos, ya que los participantes deben resistir la tendencia automática de leer la palabra y, en su lugar, responder con el color de la tinta. \n'
-  'Contribuye a preservar la función cognitiva en adultos mayores y puede ser útil en la prevención de enfermedades neurodegenerativas como la demencia o el Alzheimer. \n',style: TextStyle(fontSize:18,color: Colors.black, fontWeight: FontWeight.bold),);                      
-  static const RazGameDesc = Text('Beneficios: \n'
-  ''
-  ''
-  ''
-  '');   
+  // Constructor para inicializar los campos
+  Game({
+    required this.id,
+    required this.title,
+    required this.subtitle,
+    required this.backgroundColor,
+    required this.icon,
+    required this.dialogTitle,
+    required this.description,
+  });
 }
+
+
+final List<Game> games = [
+  Game(
+    id: 'attentionGame',
+    title: 'Atención',
+    subtitle: '¡Mídete con la prueba de Stroop!',
+    icon: Icons.psychology,
+    dialogTitle: 'Prueba de Stroop',
+    description: 'Beneficios:\n- Mejora el autocontrol.\n- Estimula la rapidez mental.\n- Ayuda a desarrollar el control de los impulsos.',
+    backgroundColor: Color(0xFF8174A0),
+  ),
+  Game(
+    id: 'memoryGame',
+    title: 'Memoria',
+    subtitle: 'Ejercita tu memoria con patrones desafiantes.',
+    icon: Icons.memory,
+    dialogTitle: 'Matriz de Memoria',
+    description: 'Beneficios:\n- Refuerza la memoria a corto plazo.\n- Mejora la retención de información.\n- Ayuda en la prevención del Alzheimer.',
+    backgroundColor: Color(0xFF6C63FF),
+  ),
+  Game(
+    id: 'reasoningGame',
+    title: 'Razonamiento',
+    subtitle: 'Pon a prueba tu lógica y habilidades analíticas.',
+    icon: Icons.lightbulb,
+    dialogTitle: 'Desafío de Razonamiento',
+    description: 'Beneficios:\n- Mejora la resolución de problemas.\n- Desarrolla el pensamiento crítico.\n- Incrementa la creatividad.',
+    backgroundColor: Color(0xFF58C9B9),
+  ),
+  Game(
+    id: 'mathGame',
+    title: 'Cálculo',
+    subtitle: 'Entrena tu agilidad mental con ejercicios matemáticos.',
+    icon: Icons.calculate,
+    dialogTitle: 'Juego de Cálculo',
+    description: 'Beneficios:\n- Incrementa la rapidez en cálculos.\n- Mejora las habilidades numéricas.\n- Desarrolla el pensamiento lógico.',
+    backgroundColor: Color(0xFFE57373),
+  ),
+];

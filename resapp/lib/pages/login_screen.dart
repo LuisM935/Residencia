@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:resapp/pages/password_reset.dart';
 
 import 'package:resapp/pages/signup_screen.dart';
 import 'package:resapp/constants/colors.dart';
@@ -35,7 +36,7 @@ class _LoginScreen extends State<LoginScreen>{
         ),
         child: Padding(
          padding: const EdgeInsets.only(top: 60.0, left: 22),
-          child: Text('Bienvenido\nInicia sesión', style: TextStyle(
+          child: Text('Bienvenido a Brain+\nInicia sesión', style: TextStyle(
             fontSize: 30,
             color: Colors.white,
             fontWeight: FontWeight.bold
@@ -88,12 +89,19 @@ class _LoginScreen extends State<LoginScreen>{
                   ),
                   SizedBox(height: 20,),
                   Align(
+                    
                     alignment: Alignment.centerRight,
-                    child: Text('¿Olvidaste tu contraseña?', style: TextStyle(
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) =>  ForgotPasswordScreen()));
+                      },
+                      child: Text('¿Olvidaste tu contraseña?', style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                         
-                      ),),
+                      ),
+                    ),
+                  ),
                   ),
                   SizedBox(height: 50,),
                   ElevatedButton(
@@ -154,7 +162,7 @@ class _LoginScreen extends State<LoginScreen>{
                     )
                     )
                   )
-                ],
+              ],
               ),
             ),
           ),

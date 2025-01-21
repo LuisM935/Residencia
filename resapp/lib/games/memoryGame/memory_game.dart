@@ -155,7 +155,7 @@ class _MemoryGameState extends State<MemoryGame> {
 
   String valoracion(){
 
-    if (tempscore >= 7 ){
+    if (tempscore >= 10 ){
 
       return "Avanzado \n" + MemLevels.Avanzado;
 

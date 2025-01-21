@@ -38,7 +38,7 @@ class _SignupScreen extends State<SignupScreen>{
           ),
           child: Padding(
               padding: const EdgeInsets.only(top: 60.0, left: 22),
-              child: Text('Bienvenido\nCrea una cuenta nueva', style: TextStyle(
+              child: Text('Brain+\nCrea una cuenta nueva', style: TextStyle(
                 fontSize: 30,
                 color: Colors.white,
                 fontWeight: FontWeight.bold

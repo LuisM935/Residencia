@@ -21,22 +21,22 @@ class RazLevels{
 
 class MemLevels{
   
-  static String Avanzado = "Posees una excelente habilidad cognitiva, con rapidez y alta precisión.";
+  static String Avanzado = "Tu memoria está en su mejor forma. ¡Continúa ejercitándola para mantener este alto nivel de rendimiento!";
   
   
-  static String Intermedio = "Tienes una comprensión razonable, aunque podrían mejorar en rapidez o precisión.";
+  static String Intermedio = "Posees una gran habilidad para enfocarte, ¡Sigue mejorando!";
 
-  static String Bajo = "Tu razonamiento está por debajo del promedio. Esfuérzate para mejorar y continúa practicando.";
+  static String Bajo = "Recuerda, incluso los pequeños progresos son importantes. Continúa practicando para mejorar día a día.";
 }
 
 class AttLevels{
   
-  static String Avanzado = "Posees una excelente habilidad cognitiva, con rapidez y alta precisión.";
+  static String Avanzado = "¡Enhorabuena! Has alcanzado el nivel avanzado. Tu atención sostenida y agudeza mental son impresionantes.";
   
   
-  static String Intermedio = "Tienes una comprensión razonable, aunque podrían mejorar en rapidez o precisión.";
+  static String Intermedio = "Tu enfoque y atención son muy sólidos, ¡Aún hay camino para recorrer!";
 
-  static String Bajo = "Tu razonamiento está por debajo del promedio. Esfuérzate para mejorar y continúa practicando.";
+  static String Bajo = "¡No te preocupes! Cada partida es una oportunidad para mejorar. Sigue practicando, ¡lo estás haciendo genial!";
 }
 
 /*  */

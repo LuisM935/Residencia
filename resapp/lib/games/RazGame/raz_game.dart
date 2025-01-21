@@ -189,6 +189,8 @@ void _checkAnswer(String selectedAnswer) async {
         backgroundColor: Colores.pColor,
       ),
       body: Container(
+        width: double.infinity,
+        height: double.infinity,
         decoration: BoxDecoration(color: Colores.bgColor),
         padding: const EdgeInsets.all(20.0),
         child: _isGameOver

@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
 import 'package:resapp/pages/login_screen.dart';
-//Firebase
+import 'package:resapp/util/nb_profile.dart';
+
 
 
 
@@ -41,31 +42,18 @@ class NavBar extends StatelessWidget {
               ),
               accountName: Text(user?.displayName ?? 'Nombre no disponible'),
               accountEmail: Text(user?.email ?? 'Email no disponible'),
-              currentAccountPicture: CircleAvatar(
-                
-                child: ClipOval(
-                  //child: Image.x();
-                ),
-              ),),
+              ),
             ListTile(
               leading: Icon(Icons.person),
               title: Text('Perfil'),
               onTap: (){
-                
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
               },
         
         
             ),
            
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Configuración'),
-              onTap: (){
-                
-              },
-        
-        
-            ),
+            
              ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text('Cerrar sesión'),
