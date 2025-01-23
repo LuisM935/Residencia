@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
@@ -22,6 +23,7 @@ class _AttentionGameState extends State<AttentionGame> {
   int _timeLeft = 60; // Tiempo en segundos
   late Timer _timer;
   bool _isGameOver = false;
+   final player = AudioPlayer();
 
   // Probabilidad de que el nombre del color coincida con el color (0.0 a 1.0)
   double _matchProbability = 0.3;
@@ -30,7 +32,16 @@ class _AttentionGameState extends State<AttentionGame> {
   int attGameRecord = 0;
   String gameId = "attentionGame";
 
-
+  //Sonidos
+  void soundCorrect() async {
+    await player.play(AssetSource('audio/correct.mp3')); 
+  }
+   void soundError() async {
+    await player.play(AssetSource('audio/error.mp3')); 
+  }
+     void soundEnd() async {
+    await player.play(AssetSource('audio/game-over.mp3')); 
+  }
 
   Future<void> _getAttGameRecord() async {
     try {
@@ -109,6 +120,7 @@ class _AttentionGameState extends State<AttentionGame> {
 
   // Finalizar el juego
   void _endGame() {
+    soundEnd();
     setState(() {
       _isGameOver = true;
     });
@@ -119,6 +131,7 @@ class _AttentionGameState extends State<AttentionGame> {
   void _checkAnswer(Color selectedColor) {
     bool isCorrect = selectedColor == _currentColorText;
     if (isCorrect) {
+      soundCorrect();
       setState(() {
         _score++;
         if (_score > attGameRecord) {
@@ -130,7 +143,7 @@ class _AttentionGameState extends State<AttentionGame> {
           }
       });
     } else {
-
+      soundError();
     }
     _generateRandomColor(); // Generar una nueva pregunta
     
@@ -172,7 +185,13 @@ Widget build(BuildContext context) {
     body: Container(
       width: double.infinity,
       height: double.infinity,
-      color: Colores.bgColor, // Color de fondo
+      decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/background2.png'),
+                  fit: BoxFit.cover,
+              ),
+              
+            ), // Color de fondo
       child: _isGameOver
           ? Center(
             child: Column(

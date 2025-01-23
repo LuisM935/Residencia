@@ -46,11 +46,15 @@ class _MainMenu extends State<MainMenu>{
       body: Stack(
         children: [
           // Fondo
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colores.qColor,
+        Container(
+              height: double.infinity,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/background1.png'),
+                  fit: BoxFit.cover,
+              ),
+              
             ),
           ),
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:resapp/constants/colors.dart';
@@ -19,6 +20,7 @@ class RazGame extends StatefulWidget {
 
 
 class _RazGameState extends State<RazGame> {
+  final player = AudioPlayer();
   int _timeLeft = 60;
   int _score = 0;
   int _totalQuestions = 0; // Para contar el total de analogías hechas
@@ -49,6 +51,17 @@ class _RazGameState extends State<RazGame> {
   Map<String, String> currentAnalogy = {};
   List<String> options = [];
 
+  //Sonidos
+  void soundCorrect() async {
+     player.play(AssetSource('audio/correct.mp3')); 
+  }
+   void soundError() async {
+     player.play(AssetSource('audio/error.mp3')); 
+  }
+     void soundEnd() async {
+     player.play(AssetSource('audio/game-over.mp3')); 
+  }
+
 Future<void> _getRazGameRecord() async {
     try {
     // Obtener el userId desde Firebase Authentication
@@ -74,6 +87,7 @@ Future<void> _getRazGameRecord() async {
   void _startTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_timeLeft == 0) {
+        soundEnd();
         _endGame();
       } else {
         setState(() {
@@ -144,6 +158,7 @@ void _checkAnswer(String selectedAnswer) async {
 
     // Verificar si la respuesta es correcta
     if (selectedAnswer == currentAnalogy['correctAnswer']) {
+      soundCorrect();
       _score++;
       _totalCorrect++;
 
@@ -154,6 +169,8 @@ void _checkAnswer(String selectedAnswer) async {
         // Llamar al servicio para guardar el récord
         GameService().saveGameRecord(gameId: gameId, record: razGameRecord);
       }
+    }else{
+      soundError();
     }
 
     // Generar una nueva analogía
@@ -191,7 +208,13 @@ void _checkAnswer(String selectedAnswer) async {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(color: Colores.bgColor),
+        decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/background2.png'),
+                  fit: BoxFit.cover,
+              ),
+              
+            ),
         padding: const EdgeInsets.all(20.0),
         child: _isGameOver
             ? Center(

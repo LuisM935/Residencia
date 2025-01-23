@@ -6,6 +6,7 @@ import 'package:resapp/constants/colors.dart';
 import 'package:resapp/pages/menu.dart';
 import 'package:resapp/services/userscores_service.dart';
 import 'package:resapp/constants/evaluation.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class MemoryGame extends StatefulWidget {
   @override
@@ -13,7 +14,9 @@ class MemoryGame extends StatefulWidget {
 }
 
 class _MemoryGameState extends State<MemoryGame> {
+  
   final int gridSize = 6;
+  final player = AudioPlayer();
   List<int> pattern = [];
   List<bool> userSelection = List.filled(36, false);
   bool showPattern = true;
@@ -24,6 +27,22 @@ class _MemoryGameState extends State<MemoryGame> {
 
   int memGameRecord = 0;
   String gameId = "memoryGame";
+
+
+  
+
+  //Sonidos
+  void soundCorrect() async {
+    await player.play(AssetSource('audio/correct.mp3'), volume: 1); 
+  }
+
+  void soundEnd() async {
+    await player.play(AssetSource('audio/game-over2.mp3')); 
+  }
+    void soundTap() async {
+    await player.play(AssetSource('audio/click.mp3')); 
+  }
+
 
 
   Future<void> _getMemGameRecord() async {
@@ -100,6 +119,7 @@ class _MemoryGameState extends State<MemoryGame> {
 
     // Si el jugador selecciona correctamente
     if (_isGameWon()) {
+      soundCorrect();
       setState(() {
         score++;
         if (score > memGameRecord) {
@@ -109,13 +129,16 @@ class _MemoryGameState extends State<MemoryGame> {
             // Actualizar el récord en Firestore
             GameService().saveGameRecord(gameId: gameId, record: memGameRecord);
           }
+        
         _resetGame(); 
       });
      
       
     } else if (_isGameLost()) {
+      soundEnd();
       tempscore = score;
       score = 0;
+      soundEnd();
       
     }
   }
@@ -123,6 +146,8 @@ class _MemoryGameState extends State<MemoryGame> {
   bool _isGameWon() {
     for (int i = 0; i < pattern.length; i++) {
       if (!userSelection[pattern[i]]) {
+        
+
         return false;
       }
     }
@@ -190,19 +215,18 @@ Widget build(BuildContext context) {
     ),
     body: Container(
       decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.white,Colors.grey],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-
+                image: DecorationImage(
+                  image: AssetImage('assets/images/background2.png'),
+                  fit: BoxFit.cover,
+              ),
+              
+            ), // Color d
         child: _isGameLost() ? 
         Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                      Text('¡Se acabó el tiempo!', style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold)),
+                      Text('¡Perdiste!', style: TextStyle(fontSize: 30, color: Colors.black, fontWeight: FontWeight.bold)),
                       Text('Puntuación: $tempscore', style: TextStyle(fontSize: 20, color: Colors.red, fontWeight: FontWeight.bold)),
                       SizedBox(height: 50,),
                       Container(

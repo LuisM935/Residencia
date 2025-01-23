@@ -8,6 +8,8 @@ import 'package:resapp/pages/menu.dart';
 import 'package:flutter/foundation.dart';
 //Firebase
 import 'package:resapp/services/userscores_service.dart';
+//sounds
+import 'package:audioplayers/audioplayers.dart';
 
 
 class MathGame extends StatefulWidget {
@@ -16,6 +18,7 @@ class MathGame extends StatefulWidget {
 }
 
 class _MathGameState extends State<MathGame> {
+  final player = AudioPlayer();
   int number1 = 0;  // Valor predeterminado.
   int number2 = 0;  // Valor predeterminado.
   String operation = ''; // Valor predeterminado.
@@ -43,6 +46,17 @@ class _MathGameState extends State<MathGame> {
     generateNewQuestion();
     startTimer();
     _getMathGameRecord();
+  }
+
+  //Sonidos
+  void soundCorrect() async {
+    await player.play(AssetSource('audio/correct.mp3')); 
+  }
+   void soundError() async {
+    await player.play(AssetSource('audio/error.mp3')); 
+  }
+     void soundEnd() async {
+    await player.play(AssetSource('audio/game-over.mp3')); 
   }
   // Función para obtener el récord desde Firestore
 Future<void> _getMathGameRecord() async {
@@ -131,6 +145,7 @@ void startTimer() {
           timeLeft--;
         } else {
           timer.cancel();
+          soundEnd();
           isGameOver = true; // Fin del juego si el tiempo se agota.
           
         }
@@ -139,24 +154,32 @@ void startTimer() {
   }
 
 void checkAnswer(int selectedAnswer) {
-    if (selectedAnswer == correctAnswer) {
-      setState(() {
-        
-        score++;
-        if (score > mathGameRecord) {
-          mathGameRecord = score;
-          print("Nuevo récord alcanzado: $mathGameRecord");
-          
-          // Actualizar el récord en Firestore
-          GameService().saveGameRecord(gameId: gameId, record: mathGameRecord);
-          }
+  if (selectedAnswer == correctAnswer) {
+    setState(() {
+      // Reproducir el sonido de respuesta correcta
+      soundCorrect(); 
+      
+      // Incrementar el puntaje
+      score++;
+      
+      // Verificar si se alcanzó un nuevo récord
+      if (score > mathGameRecord) {
+        mathGameRecord = score;
+        print("Nuevo récord alcanzado: $mathGameRecord");
 
+        // Actualizar el récord en Firestore
+        GameService().saveGameRecord(gameId: gameId, record: mathGameRecord);
+      }
 
-                generateNewQuestion(); // Generar nueva pregunta.
-       
-      });
-    } 
+      // Generar nueva pregunta
+      generateNewQuestion();
+    });
+  } else {
+    // Reproducir el sonido de error
+    soundError();
   }
+}
+
 
 String userLevel(){
   if (score >= 50){
@@ -184,151 +207,170 @@ Widget build(BuildContext context) {
       centerTitle: true,
     ),
     body: isGameOver
-        ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '¡Juego Terminado!',
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.red),
-                ),
-                Text(
-                  'Puntuación: $score',
-                  style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.right,
-                ),
-                SizedBox(height: 50,),
-                Container(
-                  padding: const EdgeInsets.all(15.0),
-                  width: 300,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colores.pColor,
-                    borderRadius: BorderRadius.circular(16),
+        ? Container(
+          decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/background2.png'),
+                  fit: BoxFit.fill,
+              ),
+              
+            ), // Color d
+          child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '¡Juego Terminado!',
+                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.red),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Text(
-                        'Nivel: ${userLevel()}',
-                        style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
+                  Text(
+                    'Puntuación: $score',
+                    style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.right,
                   ),
-                ),
-                SizedBox(height: 50),
-                ElevatedButton(
-                  child: Text('Reiniciar', style: TextStyle(color: Colors.white, fontSize: 20)),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(200, 50),
-                    backgroundColor: Colores.pColor,
-                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                  SizedBox(height: 50,),
+                  Container(
+                    padding: const EdgeInsets.all(15.0),
+                    width: 300,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: Colores.pColor,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Text(
+                          'Nivel: ${userLevel()}',
+                          style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                    ),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      isGameOver = false;
-                      timeLeft = 60;
-                      generateNewQuestion();
-                      startTimer();
-                      
-                      score = 0;
-                    });
-                  },
-                ),
-                SizedBox(height: 25),
-                ElevatedButton(
-                  child: Text('Salir', style: TextStyle(color: Colors.white, fontSize: 20)),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(200, 50),
-                    backgroundColor: Colores.pColor,
-                    padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                  SizedBox(height: 50),
+                  ElevatedButton(
+                    child: Text('Reiniciar', style: TextStyle(color: Colors.white, fontSize: 20)),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(200, 50),
+                      backgroundColor: Colores.pColor,
+                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isGameOver = false;
+                        timeLeft = 60;
+                        generateNewQuestion();
+                        startTimer();
+                        
+                        score = 0;
+                      });
+                    },
                   ),
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => MainMenu()),
-                      (Route<dynamic> route) => false,
-                    );
-                  },
-                ),
-              ],
+                  SizedBox(height: 25),
+                  ElevatedButton(
+                    child: Text('Salir', style: TextStyle(color: Colors.white, fontSize: 20)),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(200, 50),
+                      backgroundColor: Colores.pColor,
+                      padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                    ),
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => MainMenu()),
+                        (Route<dynamic> route) => false,
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          )
-        : Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                // Determinar si es Web o móvil
-                bool isWeb = kIsWeb || constraints.maxWidth > 600;
-
-                return Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Record: $mathGameRecord',
-                          style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.right,
-                        ),
-                        Text(
-                          'Puntuación: $score',
-                          style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.right,
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 50),
-                    Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16.0),
-                          color: Colores.pColor,
-                        ),
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          '¿Cuánto es $number1 $operation $number2?',
-                          style: TextStyle(fontSize: 28, color: Colores.qColor, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      'Tiempo restante: $timeLeft segundos',
-                      style: TextStyle(fontSize: 25, color: Colors.red, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 20),
-                    // Si es Web o pantalla grande, usar un Grid más grande
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(), // Evita que el grid sea desplazable
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: isWeb ? 4 : 2, // 4 columnas en web, 2 en móvil
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
-                        childAspectRatio: isWeb ? 3 : 2, // Relación de aspecto más amplia en web
-                      ),
-                      itemCount: options.length,
-                      itemBuilder: (context, index) {
-                        return ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colores.pColor,
+        )
+        : Container(
+          
+          decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/background2.png'),
+                  fit: BoxFit.fill,
+              ),
+              
+            ), // Color d
+          child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Determinar si es Web o móvil
+                  bool isWeb = kIsWeb || constraints.maxWidth > 600;
+          
+                  return Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Record: $mathGameRecord',
+                            style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.right,
                           ),
-                          onPressed: () => checkAnswer(options[index]),
+                          Text(
+                            'Puntuación: $score',
+                            style: TextStyle(fontSize: 20, color: Colores.pColor, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.right,
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 50),
+                      Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16.0),
+                            color: Colores.pColor,
+                          ),
+                          padding: EdgeInsets.all(10.0),
                           child: Text(
-                            '${options[index]}',
-                            style: TextStyle(fontSize: 30, color: Colores.qColor, fontWeight: FontWeight.bold),
+                            '¿Cuánto es $number1 $operation $number2?',
+                            style: TextStyle(fontSize: 28, color: Colores.qColor, fontWeight: FontWeight.bold),
                           ),
-                        );
-                      },
-                    ),
-                  ],
-                );
-              },
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        'Tiempo restante: $timeLeft segundos',
+                        style: TextStyle(fontSize: 25, color: Colors.red, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 20),
+                      // Si es Web o pantalla grande, usar un Grid más grande
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(), // Evita que el grid sea desplazable
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: isWeb ? 4 : 2, // 4 columnas en web, 2 en móvil
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 10,
+                          childAspectRatio: isWeb ? 3 : 2, // Relación de aspecto más amplia en web
+                        ),
+                        itemCount: options.length,
+                        itemBuilder: (context, index) {
+                          return ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colores.pColor,
+                            ),
+                            onPressed: () => checkAnswer(options[index]),
+                            child: Text(
+                              '${options[index]}',
+                              style: TextStyle(fontSize: 30, color: Colores.qColor, fontWeight: FontWeight.bold),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
-          ),
+        ),
   );
 }
 

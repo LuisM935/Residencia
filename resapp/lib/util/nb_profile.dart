@@ -69,79 +69,90 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min, // Esto limita el tamaño al contenido
-            crossAxisAlignment: CrossAxisAlignment.center, // Centrado horizontal
-            children: [
-              // Aquí el primer bloque de texto con el nombre del usuario
-              Center(
-                child: Container(
-                  width: 500, // Definir un ancho fijo de 500px
-                  child: ListTile(
-                    title: Text(
-                      '${user?.displayName ?? 'username'}',
+      child: Container(
+        width: double.infinity, // Esto está bien porque puede expandirse horizontalmente
+        height: MediaQuery.of(context).size.height, // Usa la altura de la pantalla
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/background1.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+          child: Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min, // Esto limita el tamaño al contenido
+              crossAxisAlignment: CrossAxisAlignment.center, // Centrado horizontal
+              children: [
+                
+                // Aquí el primer bloque de texto con el nombre del usuario
+                Center(
+                  child: Container(
+                    width: 500, // Definir un ancho fijo de 500px
+                    child: ListTile(
+                      title: Text(
+                        '${user?.displayName ?? 'username'}',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                // Título de Estadísticas
+                Center(
+                  child: Container(
+                    width: 500, // Definir un ancho fijo de 500px
+                    child: Text(
+                      'Estadísticas',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 32,
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
                     ),
                   ),
                 ),
-              ),
-              // Título de Estadísticas
-              Center(
-                child: Container(
-                  width: 500, // Definir un ancho fijo de 500px
-                  child: Text(
-                    'Estadísticas',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 50),
-              // Generar dinámicamente las tarjetas para los juegos
-              ...gameIds.map((gameId) {
-                return Center( // Usar Center para asegurar que el contenido está centrado
-                  child: Container(
-                    width: 500, // Definir un ancho fijo de 500px
-                    margin: EdgeInsets.symmetric(vertical: 8.0),
-                    decoration: BoxDecoration(
-                      color: Colores.pColor,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: ListTile(
-                      contentPadding: EdgeInsets.all(16.0),
-                      leading: Icon(
-                        _getGameIcon(gameId),
-                        color: Colores.txtColor,
-                        size: 32,
+                SizedBox(height: 50),
+                // Generar dinámicamente las tarjetas para los juegos
+                ...gameIds.map((gameId) {
+                  return Center( // Usar Center para asegurar que el contenido está centrado
+                    child: Container(
+                      width: 500, // Definir un ancho fijo de 500px
+                      margin: EdgeInsets.symmetric(vertical: 8.0),
+                      decoration: BoxDecoration(
+                        color: Colores.pColor,
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                      title: Text(
-                        _getGameName(gameId),
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                      child: ListTile(
+                        contentPadding: EdgeInsets.all(16.0),
+                        leading: Icon(
+                          _getGameIcon(gameId),
                           color: Colores.txtColor,
+                          size: 32,
+                        ),
+                        title: Text(
+                          _getGameName(gameId),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colores.txtColor,
+                          ),
+                        ),
+                        subtitle: Text(
+                          'Puntuación máxima: ${gameRecords[gameId] ?? 0}',
+                          style: TextStyle(color: Colores.txtColor),
                         ),
                       ),
-                      subtitle: Text(
-                        'Puntuación máxima: ${gameRecords[gameId] ?? 0}',
-                        style: TextStyle(color: Colores.txtColor),
-                      ),
                     ),
-                  ),
-                );
-              }).toList(),
-            ],
+                  );
+                }).toList(),
+              ],
+            ),
           ),
         ),
       ),

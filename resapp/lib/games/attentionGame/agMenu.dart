@@ -10,7 +10,7 @@ class agMenu extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colores.pColor,
-        title: Text('Juego de memoria', style: TextStyle(color: Colors.white),),
+        title: Text('Juego de atención', style: TextStyle(color: Colors.white),),
         centerTitle: true,
       ),
       body: Container(
